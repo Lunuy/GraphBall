@@ -1,0 +1,61 @@
+#nullable enable
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System;
+using System.Collections.ObjectModel;
+
+
+public struct GraphRendererOptions {
+    public double Unit;
+    public double Step;
+}
+
+[RequireComponent(typeof(LineRenderer))]
+public class GraphRenderer : MonoBehaviour
+{
+    private LineRenderer? _lineRenderer;
+
+    public GraphRendererOptions Options {
+        get => _options;
+        set {
+            _options = value;
+            Render();
+        }
+    }
+    public IReadOnlyList<double> YArray {
+        get => _yArray;
+        set {
+            _yArray = value;
+            Render();
+        }
+    }
+
+    GraphRendererOptions _options;
+    IReadOnlyList<double> _yArray = Array.AsReadOnly(new double[] {});
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        _lineRenderer = GetComponent<LineRenderer>()!;
+        Render();
+    }
+
+    public void Render()
+    {
+        if(_lineRenderer == null) return;
+
+        Vector3[] points = new Vector3[_yArray.Count];
+
+        for (int i = 0; i < _yArray.Count; i++) {
+            points[i] = new Vector3(
+                (float)(i * _options.Step * _options.Unit),
+                (float)(_yArray[i] * _options.Unit),
+                0
+            );
+        }
+
+        _lineRenderer.positionCount = points.Length;
+        _lineRenderer.SetPositions(points);
+    }
+}
