@@ -22,13 +22,6 @@ namespace Assets.Scripts.ExprEval
         [JsonProperty("diagnostics")]
         public readonly ErrorInfo[] Errors;
 
-        [JsonConstructor]
-        public ParseResult(int astId, ErrorInfo[] errors)
-        {
-            EvaluableAst = astId == -1 ? null : new EvaluableAst(astId);
-            Errors = errors;
-        }
-
         public ParseResult(EvaluableAst? evaluableAst, ErrorInfo[] errors)
         {
             EvaluableAst = evaluableAst;
