@@ -20,7 +20,10 @@ namespace Assets.Scripts
         // ReSharper disable once UnusedMember.Local
         private void Update()
         {
-            _graphSampler!.Variables = new[]{ _graphSampler.Variables[0] + Time.deltaTime * 2 };
+            var variables = ArrayPool<double>.Rent(1);
+            variables[0] = _graphSampler!.Variables[0] + Time.deltaTime * 2;
+            _graphSampler.Variables = variables;
+            ArrayPool<double>.Return(variables);
         }
     }
 }

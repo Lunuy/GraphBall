@@ -36,10 +36,19 @@ namespace Assets.Scripts
 
         public double[] Variables
         {
-            get => _variables;
+            get
+            {
+                var variables = new double[_variables.Length];
+                Array.Copy(_variables, variables, _variables.Length);
+                return variables;
+            }
             set
             {
-                _variables = value;
+                if (value.Length != _variables.Length)
+                {
+                    _variables = new double[value.Length];
+                }
+                Array.Copy(value, _variables, value.Length);
                 Sample();
             }
         }
@@ -52,7 +61,7 @@ namespace Assets.Scripts
             set
             {
                 _graphSampler.Function = value;
-                this.Sample();
+                Sample();
             }
         }
 
