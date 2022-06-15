@@ -43,7 +43,7 @@ namespace Assets.Scripts.ExprEval
                 Marshal.StructureToPtr(idItemList[i], idItemListPtr + i * idItemSize, false);
             }
             
-            var resultStr = Marshal.AllocCoTaskMem(1024);
+            var resultStr = Marshal.AllocCoTaskMem(1024 * 10);
 
             create_ast(
                 cStrExpr,
@@ -104,7 +104,7 @@ namespace Assets.Scripts.ExprEval
             return result;
         }
 
-        [DllImport("./epp.dll")]
+        [DllImport("epp")]
         private static extern void create_ast(
             IntPtr input, // c str
             int idItemCount,
@@ -112,10 +112,10 @@ namespace Assets.Scripts.ExprEval
             IntPtr output // c str
         );
 
-        [DllImport("./epp.dll")]
+        [DllImport("epp")]
         private static extern void dispose_ast(int astId);
 
-        [DllImport("./epp.dll")]
+        [DllImport("epp")]
         private static extern double eval_ast(int astId, VariablePairArray variables);
     }
 }
