@@ -4,7 +4,6 @@ use lexer;
 use parser;
 use diagnostic;
 use evaluator;
-use transpiler;
 use validator;
 use std::f64;
 
@@ -49,12 +48,6 @@ fn main() {
             );
 
             println!("{:?}", eval_result);
-
-            println!("{}", transpiler::transplie_to_js(
-                &ast,
-                &HashMap::new(),
-                0.001
-            ));
         }
     }
 
