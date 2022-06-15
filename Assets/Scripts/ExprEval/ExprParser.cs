@@ -2,7 +2,6 @@
 using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using UnityEngine;
 
 namespace Assets.Scripts.ExprEval
 {
