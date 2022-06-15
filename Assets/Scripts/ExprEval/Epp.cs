@@ -21,7 +21,7 @@ namespace Assets.Scripts.ExprEval
         public IntPtr Name; //c str
     }
 
-    public class Epp
+    public static class Epp
     {
         public static string CreateAst(string expr, string[] idNames)
         {
