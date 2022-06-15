@@ -1,25 +1,26 @@
 #nullable enable
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
+using UnityEngine;
 
-[RequireComponent(typeof(GraphSamplerComponent), typeof(GameGraphController))]
-public class TestGraphComponent : MonoBehaviour
+namespace Assets.Scripts
 {
-    private GraphSamplerComponent? _graphSampler;
-
-    // Start is called before the first frame update
-    void Start()
+    [RequireComponent(typeof(GraphSamplerComponent), typeof(GameGraphController))]
+    public class TestGraphComponent : MonoBehaviour
     {
-        _graphSampler = GetComponent<GraphSamplerComponent>();
-        _graphSampler.Variables = new double[1]{0};
-        _graphSampler.Function = (t, x) => Math.Sin(t[0]*x - t[0]);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        _graphSampler!.Variables = new double[1]{ _graphSampler.Variables[0] + Time.deltaTime * 2 };
+        private GraphSamplerComponent? _graphSampler;
+        
+        // ReSharper disable once UnusedMember.Local
+        private void Start()
+        {
+            _graphSampler = GetComponent<GraphSamplerComponent>();
+            _graphSampler.Variables = new double[]{0};
+            _graphSampler.Function = (t, x) => Math.Sin(t[0]*x - t[0]);
+        }
+        
+        // ReSharper disable once UnusedMember.Local
+        private void Update()
+        {
+            _graphSampler!.Variables = new[]{ _graphSampler.Variables[0] + Time.deltaTime * 2 };
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using System.Collections.Generic;
 
-namespace EppBind
+namespace Assets.Scripts
 {
     public static class ArrayPool<T>
     {
