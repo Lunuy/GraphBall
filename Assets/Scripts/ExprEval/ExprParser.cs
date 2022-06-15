@@ -5,7 +5,7 @@ using Newtonsoft.Json.Converters;
 
 namespace Assets.Scripts.ExprEval
 {
-    internal struct ParseResult : IDisposable
+    internal struct ParseResult
     {
         [JsonProperty("ast_id")]
 #pragma warning disable IDE0051 // Remove unused private members
@@ -26,8 +26,6 @@ namespace Assets.Scripts.ExprEval
             EvaluableAst = evaluableAst;
             Errors = errors;
         }
-
-        public void Dispose() => EvaluableAst?.Dispose();
     }
 
     internal struct ErrorInfo
