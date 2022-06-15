@@ -165,12 +165,12 @@ pub fn validate_bool_equation(
 }
 
 #[derive(Debug, Clone)]
-struct IdTable {
-    pub(crate) ids: HashSet<String>,
-    pub(crate) called_ids: HashSet<String>,
+pub struct IdTable {
+    pub ids: HashSet<String>,
+    pub called_ids: HashSet<String>,
 }
 
-fn make_id_list(ast: &Box<Expr>) -> IdTable {
+pub fn make_id_list(ast: &Box<Expr>) -> IdTable {
     let mut result = IdTable { ids: HashSet::new(), called_ids: HashSet::new() };
 
     traverse_ast(

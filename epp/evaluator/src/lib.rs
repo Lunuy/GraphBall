@@ -87,7 +87,7 @@ pub fn eval_equation(
     }
 }
 
-fn fold_const_expr(ast: &Box<Expr>, variables: &HashMap<String, f64>) -> f64 {
+pub fn fold_const_expr(ast: &Box<Expr>, variables: &HashMap<String, f64>) -> f64 {
     match ast.as_ref() {
         Expr::Literal(value) => value.clone(),
         Expr::Add(lhs, rhs) => fold_const_expr(lhs, variables) + fold_const_expr(rhs, variables),
