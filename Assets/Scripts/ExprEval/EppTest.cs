@@ -9,8 +9,8 @@ namespace Assets.Scripts.ExprEval
         // ReSharper disable once UnusedMember.Local
         private void Start()
         {
-            var parseResult = ExprParser.Parse("1 + ", new[] {"x"});
-            Debug.Log(parseResult);
+            using var parseResult = ExprParser.Parse("1 + x", new[] {"x"});
+            Debug.Log(parseResult.EvaluableAst?.Eval(new[] {("x", 2.0)}) ?? null);
         }
     }
 }

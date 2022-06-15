@@ -80,6 +80,8 @@ pub extern fn create_ast(
 
     output: *mut c_char,
 ) {
+    Diagnostic::clear();
+
     let input = unsafe {
         std::ffi::CStr::from_ptr(input).to_str().unwrap()
     };
@@ -124,7 +126,7 @@ pub extern fn create_ast(
     
     unsafe {
         let cstr = std::ffi::CString::new(serialized.as_bytes()).unwrap();
-        std::ptr::copy(cstr.as_ptr(), output, serialized.len());
+        std::ptr::copy(cstr.as_ptr(), output, serialized.len() + 1);
     }
 }
 

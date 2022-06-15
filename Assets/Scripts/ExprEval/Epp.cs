@@ -43,7 +43,7 @@ namespace Assets.Scripts.ExprEval
                 Marshal.StructureToPtr(idItemList[i], idItemListPtr + i * idItemSize, false);
             }
             
-            var resultStr = Marshal.AllocCoTaskMem(1024 * 10);
+            var resultStr = Marshal.AllocCoTaskMem(1024 * 2);
 
             create_ast(
                 cStrExpr,
