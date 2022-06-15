@@ -8,8 +8,8 @@ namespace Assets.Scripts
 {
     public struct GraphRendererOptions
     {
-        public double Unit;
-        public double Step;
+        public Vector2 Unit;
+        public Vector2 Offset;
     }
 
     [RequireComponent(typeof(LineRenderer))]
@@ -59,11 +59,7 @@ namespace Assets.Scripts
 
             for (var i = 0; i < _yArray.Count; i++)
             {
-                points[i] = new Vector3(
-                    (float) (i * _options.Step * _options.Unit),
-                    (float) (_yArray[i] * _options.Unit),
-                    0
-                );
+                points[i] = (_options.Offset + new Vector2((float) (i), (float) (_yArray[i]))) * _options.Unit;
             }
 
             _lineRenderer.positionCount = points.Length;

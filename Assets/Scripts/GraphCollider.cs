@@ -7,8 +7,8 @@ namespace Assets.Scripts
 {
     public struct GraphColliderOptions
     {
-        public double Unit;
-        public double Step;
+        public Vector2 Unit;
+        public Vector2 Offset;
     }
 
     [RequireComponent(typeof(EdgeCollider2D))]
@@ -56,14 +56,8 @@ namespace Assets.Scripts
             // ReSharper disable once LoopCanBeConvertedToQuery
             for (var i = 0; i < _yArray.Count; i++)
             {
-                _points.Add(new Vector2(
-                    (float) (i * _options.Step * _options.Unit),
-                    (float) (_yArray[i] * _options.Unit)
-                ));
+                _points.Add((_options.Offset + new Vector2((float) (i), (float) (_yArray[i]))) * _options.Unit);
             }
-
-            // Debug.Log(points);
-            // Debug.Log(points.Count);
 
             _edgeCollider2D.SetPoints(_points);
 

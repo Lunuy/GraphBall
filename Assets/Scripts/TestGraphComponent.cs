@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    [RequireComponent(typeof(GraphSamplerComponent), typeof(GameGraphController))]
+    [RequireComponent(typeof(GraphSamplerComponent))]
     public class TestGraphComponent : MonoBehaviour
     {
         private GraphSamplerComponent? _graphSampler;
