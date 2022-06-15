@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public struct GraphRendererOptions {
+    public struct GraphRendererOptions
+    {
         public double Unit;
         public double Step;
     }
@@ -15,24 +16,29 @@ namespace Assets.Scripts
     {
         private LineRenderer? _lineRenderer;
 
-        public GraphRendererOptions Options {
+        public GraphRendererOptions Options
+        {
             get => _options;
-            set {
+            set
+            {
                 _options = value;
                 Render();
             }
         }
-        public IReadOnlyList<double> YArray {
+
+        public IReadOnlyList<double> YArray
+        {
             get => _yArray;
-            set {
+            set
+            {
                 _yArray = value;
                 Render();
             }
         }
 
         private GraphRendererOptions _options;
-        private IReadOnlyList<double> _yArray = Array.AsReadOnly(new double[] {});
-        
+        private IReadOnlyList<double> _yArray = Array.AsReadOnly(new double[] { });
+
         // ReSharper disable once UnusedMember.Local
         private void Start()
         {
@@ -42,14 +48,15 @@ namespace Assets.Scripts
 
         public void Render()
         {
-            if(_lineRenderer == null) return;
+            if (_lineRenderer == null) return;
 
             var points = new Vector3[_yArray.Count];
 
-            for (var i = 0; i < _yArray.Count; i++) {
+            for (var i = 0; i < _yArray.Count; i++)
+            {
                 points[i] = new Vector3(
-                    (float)(i * _options.Step * _options.Unit),
-                    (float)(_yArray[i] * _options.Unit),
+                    (float) (i * _options.Step * _options.Unit),
+                    (float) (_yArray[i] * _options.Unit),
                     0
                 );
             }

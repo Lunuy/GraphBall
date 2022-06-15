@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public struct GraphColliderOptions {
+    public struct GraphColliderOptions
+    {
         public double Unit;
         public double Step;
     }
@@ -13,16 +14,21 @@ namespace Assets.Scripts
     [RequireComponent(typeof(EdgeCollider2D))]
     public class GraphCollider : MonoBehaviour
     {
-        public GraphColliderOptions Options {
+        public GraphColliderOptions Options
+        {
             get => _options;
-            set {
+            set
+            {
                 _options = value;
                 UpdateCollider();
             }
         }
-        public IReadOnlyList<double> YArray {
+
+        public IReadOnlyList<double> YArray
+        {
             get => _yArray;
-            set {
+            set
+            {
                 _yArray = value;
                 UpdateCollider();
             }
@@ -30,8 +36,8 @@ namespace Assets.Scripts
 
         private GraphColliderOptions _options;
         private EdgeCollider2D? _edgeCollider2D;
-        private IReadOnlyList<double> _yArray = Array.AsReadOnly(new double[] {});
-        
+        private IReadOnlyList<double> _yArray = Array.AsReadOnly(new double[] { });
+
         // ReSharper disable once UnusedMember.Local
         private void Start()
         {
@@ -41,14 +47,15 @@ namespace Assets.Scripts
 
         public void UpdateCollider()
         {
-            if(_edgeCollider2D == null) return;
+            if (_edgeCollider2D == null) return;
 
             var points = new List<Vector2>(_yArray.Count);
             // ReSharper disable once LoopCanBeConvertedToQuery
-            for (var i = 0; i < _yArray.Count; i++) {
+            for (var i = 0; i < _yArray.Count; i++)
+            {
                 points.Add(new Vector2(
-                    (float)(i * _options.Step * _options.Unit),
-                    (float)(_yArray[i] * _options.Unit)
+                    (float) (i * _options.Step * _options.Unit),
+                    (float) (_yArray[i] * _options.Unit)
                 ));
             }
 

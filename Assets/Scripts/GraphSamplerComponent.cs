@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public struct GraphSamplerComponentOptions {
+    public struct GraphSamplerComponentOptions
+    {
         public double MinX;
         public double MaxX;
         public double Step;
@@ -15,11 +16,14 @@ namespace Assets.Scripts
     public class GraphSamplerComponent : MonoBehaviour
     {
         public delegate void SampleHandler(ReadOnlyCollection<double> sampledYList);
+
         public event SampleHandler OnSample = delegate { };
 
-        public GraphSamplerComponentOptions Options {
+        public GraphSamplerComponentOptions Options
+        {
             get => _options;
-            set {
+            set
+            {
                 _options = value;
                 _graphSampler.MinX = value.MinX;
                 _graphSampler.MaxX = value.MaxX;
@@ -33,28 +37,32 @@ namespace Assets.Scripts
         public double[] Variables
         {
             get => _variables;
-            set {
+            set
+            {
                 _variables = value;
                 Sample();
             }
         }
-    
+
         public ReadOnlyCollection<double> SampledYList => Array.AsReadOnly(_sampledYList);
+
         public Func<double[], double, double> Function
-        { 
-            get => _graphSampler.Function; 
-            set {
+        {
+            get => _graphSampler.Function;
+            set
+            {
                 _graphSampler.Function = value;
                 this.Sample();
-            } 
+            }
         }
-    
-        private Func<double[], double, double> _function = (t, x) => x * x * 0.1;
-        private double[] _sampledYList = {};
-        private GraphSampler<double[]> _graphSampler = new(0, 0, 1, (t, x) => x);
-        private double[] _variables = {};
 
-        private void Sample() {
+        private Func<double[], double, double> _function = (t, x) => x * x * 0.1;
+        private double[] _sampledYList = { };
+        private GraphSampler<double[]> _graphSampler = new(0, 0, 1, (t, x) => x);
+        private double[] _variables = { };
+
+        private void Sample()
+        {
             _sampledYList = _graphSampler.Sample(_variables);
             OnSample.Invoke(SampledYList);
         }

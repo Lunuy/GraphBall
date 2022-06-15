@@ -18,7 +18,7 @@ namespace Assets.Scripts
         private GraphSamplerComponent? _graphSampler;
         private GraphRenderer? _graphRenderer;
         private GraphCollider? _graphCollider;
-        
+
         // ReSharper disable once UnusedMember.Global
         public void Start()
         {
@@ -28,10 +28,10 @@ namespace Assets.Scripts
 
             _graphSampler.OnSample += OnSample;
 
-            var unit = Width/(MaxX - MinX);
-            _graphSampler.Options = new GraphSamplerComponentOptions { MinX = MinX, MaxX = MaxX, Step = Step };
-            _graphRenderer.Options = new GraphRendererOptions { Unit = unit, Step = Step };
-            _graphCollider.Options = new GraphColliderOptions { Unit = unit, Step = Step };
+            var unit = Width / (MaxX - MinX);
+            _graphSampler.Options = new GraphSamplerComponentOptions {MinX = MinX, MaxX = MaxX, Step = Step};
+            _graphRenderer.Options = new GraphRendererOptions {Unit = unit, Step = Step};
+            _graphCollider.Options = new GraphColliderOptions {Unit = unit, Step = Step};
         }
 
         private void OnSample(IReadOnlyList<double> yArray)
