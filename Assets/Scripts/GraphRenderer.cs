@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -50,7 +51,11 @@ namespace Assets.Scripts
         {
             if (_lineRenderer == null) return;
 
-            var points = new Vector3[_yArray.Count];
+            var points = new NativeArray<Vector3>(
+                _yArray.Count,
+                Allocator.Temp,
+                NativeArrayOptions.UninitializedMemory
+            );
 
             for (var i = 0; i < _yArray.Count; i++)
             {
@@ -63,6 +68,8 @@ namespace Assets.Scripts
 
             _lineRenderer.positionCount = points.Length;
             _lineRenderer.SetPositions(points);
+            
+            points.Dispose();
         }
     }
 }
