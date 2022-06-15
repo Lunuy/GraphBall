@@ -38,7 +38,7 @@ namespace Assets.Scripts
             Debug.Log("A");
             CreateLineMaterial();
             // Apply the line material
-            _lineMaterial.SetPass(0);
+            _lineMaterial!.SetPass(0);
 
             GL.PushMatrix();
             // Set transformation matrix for drawing to
