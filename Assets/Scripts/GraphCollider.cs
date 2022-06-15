@@ -45,15 +45,18 @@ namespace Assets.Scripts
             UpdateCollider();
         }
 
+        private readonly List<Vector2> _points = new();
+
         public void UpdateCollider()
         {
             if (_edgeCollider2D == null) return;
 
-            var points = new List<Vector2>(_yArray.Count);
+            _points.Clear();
+
             // ReSharper disable once LoopCanBeConvertedToQuery
             for (var i = 0; i < _yArray.Count; i++)
             {
-                points.Add(new Vector2(
+                _points.Add(new Vector2(
                     (float) (i * _options.Step * _options.Unit),
                     (float) (_yArray[i] * _options.Unit)
                 ));
@@ -62,7 +65,7 @@ namespace Assets.Scripts
             // Debug.Log(points);
             // Debug.Log(points.Count);
 
-            _edgeCollider2D.SetPoints(points);
+            _edgeCollider2D.SetPoints(_points);
 
         }
     }
