@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace Assets.Scripts
     [RequireComponent(typeof(LineRenderer))]
     public class GraphSamplerComponent : MonoBehaviour
     {
-        public delegate void SampleHandler(ReadOnlyCollection<double> sampledYList);
+        public delegate void SampleHandler(IReadOnlyList<double> sampledYList);
 
         public event SampleHandler OnSample = delegate { };
 
@@ -53,7 +54,10 @@ namespace Assets.Scripts
             }
         }
 
-        public ReadOnlyCollection<double> SampledYList => Array.AsReadOnly(_sampledYList);
+        public double GetVariablesNth(int index) => _variables[index];
+        public double GetVariablesLength() => _variables.Length;
+
+        public IReadOnlyList<double> SampledYList => _sampledYList;
 
         public Func<double[], double, double> Function
         {
@@ -66,14 +70,14 @@ namespace Assets.Scripts
         }
 
         private Func<double[], double, double> _function = (t, x) => x * x * 0.1;
-        private double[] _sampledYList = { };
+        private readonly List<double> _sampledYList = new();
         private GraphSampler<double[]> _graphSampler = new(0, 0, 1, (t, x) => x);
         private double[] _variables = { };
 
         private void Sample()
         {
-            _sampledYList = _graphSampler.Sample(_variables);
-            OnSample.Invoke(SampledYList);
+            _graphSampler.Sample(_variables, _sampledYList);
+            OnSample.Invoke(_sampledYList);
         }
     }
 }

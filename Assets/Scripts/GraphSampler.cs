@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using System.Collections.Generic;
 
 namespace Assets.Scripts
 {
@@ -18,18 +19,17 @@ namespace Assets.Scripts
         public double Step;
         public Func<T, double, double> Function;
 
-        public double[] Sample(T t)
+        public void Sample(T t, List<double> result)
         {
-            var sampledYArray = new double[(int) Math.Floor((MaxX - MinX) / Step)];
+            result.Clear();
+            var length = (int) Math.Floor((MaxX - MinX) / Step);
 
             var x = MinX;
-            for (var i = 0; i < sampledYArray.Length; i++)
+            for (var i = 0; i < length; i++)
             {
-                sampledYArray[i] = Function(t, x);
+                result.Add(Function(t, x));
                 x += Step;
             }
-
-            return sampledYArray;
         }
     }
 }

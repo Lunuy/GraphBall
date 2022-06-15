@@ -21,7 +21,7 @@ namespace Assets.Scripts
         private void Update()
         {
             var variables = ArrayPool<double>.Rent(1);
-            variables[0] = _graphSampler!.Variables[0] + Time.deltaTime * 2;
+            variables[0] = _graphSampler!.GetVariablesNth(0) + Time.deltaTime * 2;
             _graphSampler.Variables = variables;
             ArrayPool<double>.Return(variables);
         }
