@@ -1,28 +1,72 @@
 #nullable enable
 using Assets.Scripts;
 using UnityEditor;
-// ReSharper disable CompareOfFloatsByEqualityOperator
 
 namespace Assets.Editor
 {
     [CustomEditor(typeof(GraphController))]
     [CanEditMultipleObjects]
+    // ReSharper disable once UnusedMember.Global
     public class GraphControllerEditor : UnityEditor.Editor
     {
+        private GraphController? _graphController;
+
+        // ReSharper disable once UnusedMember.Local
+        private void OnEnable()
+        {
+            _graphController = (GraphController) target;
+        }
+
         // ReSharper disable once UnusedMember.Local
         public override void OnInspectorGUI()
         {
-            var graphController = (GraphController) target;
+            {
+                EditorGUI.BeginChangeCheck();
+                var minX = EditorGUILayout.DoubleField("Min X", _graphController!.MinX);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    Undo.RecordObject(_graphController, "change Min X");
+                    _graphController.MinX = minX;
+                    EditorUtility.SetDirty(_graphController);
+                }
+            }
 
-            var minX = EditorGUILayout.DoubleField("Min X", graphController.MinX);
-            var maxX = EditorGUILayout.DoubleField("Max X", graphController.MaxX);
-            var minY = EditorGUILayout.DoubleField("Min Y", graphController.MinY);
-            var step = EditorGUILayout.DoubleField("Step", graphController.Step);
+            {
+                EditorGUI.BeginChangeCheck();
+                var maxX = EditorGUILayout.DoubleField("Max X", _graphController.MaxX);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    Undo.RecordObject(_graphController, "change Max X");
+                    _graphController.MaxX = maxX;
+                    EditorUtility.SetDirty(_graphController);
+                }
+            }
 
-            if (minX != graphController.MinX) graphController.MinX = minX;
-            if (maxX != graphController.MaxX) graphController.MaxX = maxX;
-            if (minY != graphController.MinY) graphController.MinY = minY;
-            if (step != graphController.Step) graphController.Step = step;
+            {
+                EditorGUI.BeginChangeCheck();
+                var minY = EditorGUILayout.DoubleField("Min Y", _graphController.MinY);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    Undo.RecordObject(_graphController, "change Min Y");
+                    _graphController.MinY = minY;
+                    EditorUtility.SetDirty(_graphController);
+                }
+            }
+
+            EditorGUI.BeginDisabledGroup(true);
+            EditorGUILayout.DoubleField("Max Y", _graphController.MaxY);
+            EditorGUI.EndDisabledGroup();
+            
+            {
+                EditorGUI.BeginChangeCheck();
+                var step = EditorGUILayout.DoubleField("Step", _graphController.Step);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    Undo.RecordObject(_graphController, "change Step");
+                    _graphController.Step = step;
+                    EditorUtility.SetDirty(_graphController);
+                }
+            }
         }
     }
 }
