@@ -78,15 +78,22 @@ namespace Assets.Scripts.ExprEval
                 marshaledVariables[i].Value = variables[i].Item2;
             }
 
+            var variablePairSize = Marshal.SizeOf(typeof(VariablePair));
+
             var variablePairArray = new VariablePairArray
             {
                 Count = variables.Length,
-                Pairs = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(VariablePair)) * variables.Length)
+                Pairs = Marshal.AllocCoTaskMem(variablePairSize * variables.Length)
             };
 
             for (var i = 0; i < variables.Length; ++i)
             {
-                Marshal.StructureToPtr(marshaledVariables[i], variablePairArray.Pairs + i * Marshal.SizeOf(typeof(VariablePair)), false);
+                unsafe
+                {
+                    var pairs = (VariablePair*)variablePairArray.Pairs.ToPointer();
+                    pairs[i] = marshaledVariables[i];
+                }
+                //Marshal.StructureToPtr(marshaledVariables[i], variablePairArray.Pairs + i * variablePairSize, false);
             }
 
             var result = eval_ast(astId, variablePairArray);

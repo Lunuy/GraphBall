@@ -8,9 +8,15 @@ namespace Assets.Scripts
     [RequireComponent(typeof(GraphSamplerComponent), typeof(GraphRenderer), typeof(GraphCollider)), RequireComponent(typeof(Gridder))]
     public class GraphController : MonoBehaviour
     {
-        public double MinX {
-            get => _graphSampler == null ? 0 : _graphSampler.Options.MinX;
-            set {
+        private double _minX;
+
+        public double MinX
+        {
+            get => _graphSampler == null ? _minX : _graphSampler.Options.MinX;
+            set
+            {
+                _minX = value;
+
                 if (_graphSampler == null) return;
                 if (_gridder == null) return;
                 
@@ -26,9 +32,15 @@ namespace Assets.Scripts
                 };
             }
         }
+
+        private double _maxX = 10;
+
         public double MaxX {
-            get => _graphSampler == null ? 0 : _graphSampler.Options.MaxX;
-            set {
+            get => _graphSampler == null ? _maxX : _graphSampler.Options.MaxX;
+            set
+            {
+                _maxX = value;
+
                 if (_graphSampler == null) return;
                 if (_gridder == null) return;
                 
@@ -45,9 +57,14 @@ namespace Assets.Scripts
             }
         }
 
+        private double _step = 0.05;
+
         public double Step {
-            get => _graphSampler == null ? 0 : _graphSampler.Options.Step;
-            set {
+            get => _graphSampler == null ? _step : _graphSampler.Options.Step;
+            set
+            {
+                _step = value;
+
                 if (_graphSampler == null) return;
                 if (_gridder == null) return;
                 
@@ -58,6 +75,8 @@ namespace Assets.Scripts
                 };
             }
         }
+
+        private double _minY;
 
         public double MinY {
             get => _minY;
@@ -78,13 +97,18 @@ namespace Assets.Scripts
         private GraphRenderer? _graphRenderer;
         private GraphCollider? _graphCollider;
         private Gridder? _gridder;
-        
-        private double _minY;
 
         // ReSharper disable once UnusedMember.Global
         public void Start()
         {
             _graphSampler = GetComponent<GraphSamplerComponent>();
+            _graphSampler.Options = new GraphSamplerComponentOptions()
+            {
+                MaxX = _maxX,
+                MinX = _minX,
+                Step = _step
+            };
+
             _graphRenderer = GetComponent<GraphRenderer>();
             _graphCollider = GetComponent<GraphCollider>();
             _gridder = GetComponent<Gridder>();
@@ -100,18 +124,21 @@ namespace Assets.Scripts
             _graphCollider!.Options = new GraphColliderOptions { Unit = unit, Offset = new Vector2(0, (float)_minY) };
         }
 
+        private readonly List<double> _validatedYArray = new();
+
         private void OnSample(IReadOnlyList<double> yArray)
         {
-            double maxY = _minY + (MaxX - MinX) * (transform.localScale.y / transform.localScale.x);
+            var maxY = _minY + (MaxX - MinX) * (transform.localScale.y / transform.localScale.x);
 
-            double[] validatedYArray = new double[yArray.Count];
-            for (int i = 0; i < yArray.Count; i++)
+            _validatedYArray.Clear();
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (var i = 0; i < yArray.Count; i++)
             {
-                validatedYArray[i] = Math.Min(Math.Max(yArray[i], _minY), maxY);
+                _validatedYArray.Add(Math.Min(Math.Max(yArray[i], _minY), maxY));
             }
 
-            _graphRenderer!.YArray = Array.AsReadOnly(validatedYArray);
-            _graphCollider!.YArray = Array.AsReadOnly(validatedYArray);
+            _graphRenderer!.YArray = _validatedYArray;
+            _graphCollider!.YArray = _validatedYArray;
         }
 
         // ReSharper disable once UnusedMember.Local
