@@ -8,7 +8,6 @@ namespace Assets.Scripts
     [RequireComponent(typeof(GraphSamplerComponent), typeof(GraphRenderer), typeof(GraphCollider)), RequireComponent(typeof(Gridder))]
     public class GraphController : MonoBehaviour
     {
-        [SerializeField]
         public double MinX {
             get => _graphSampler == null ? 0 : _graphSampler.Options.MinX;
             set {
@@ -27,7 +26,6 @@ namespace Assets.Scripts
                 };
             }
         }
-        [SerializeField]
         public double MaxX {
             get => _graphSampler == null ? 0 : _graphSampler.Options.MaxX;
             set {
@@ -46,7 +44,7 @@ namespace Assets.Scripts
                 };
             }
         }
-        [SerializeField]
+
         public double Step {
             get => _graphSampler == null ? 0 : _graphSampler.Options.Step;
             set {
@@ -61,7 +59,6 @@ namespace Assets.Scripts
             }
         }
 
-        [SerializeField]
         public double MinY {
             get => _minY;
             set {
@@ -75,16 +72,14 @@ namespace Assets.Scripts
                 };
             }
         }
-        public double MaxY {
-            get => _minY + (MaxX - MinX) * (transform.localScale.y / transform.localScale.x);
-        }
+        public double MaxY => _minY + (MaxX - MinX) * (transform.localScale.y / transform.localScale.x);
 
         private GraphSamplerComponent? _graphSampler;
         private GraphRenderer? _graphRenderer;
         private GraphCollider? _graphCollider;
         private Gridder? _gridder;
-
-        private double _minY = 0;
+        
+        private double _minY;
 
         // ReSharper disable once UnusedMember.Global
         public void Start()
@@ -97,8 +92,9 @@ namespace Assets.Scripts
             _graphSampler.OnSample += OnSample;
         }
         
+        // ReSharper disable once UnusedMember.Global
         public void Update() {
-            Vector2 unit = new Vector2(1.0f / _graphSampler!.SampledYList.Count, 1.0f / (float)(MaxY - _minY));
+            var unit = new Vector2(1.0f / _graphSampler!.SampledYList.Count, 1.0f / (float)(MaxY - _minY));
 
             _graphRenderer!.Options = new GraphRendererOptions { Unit = unit, Offset = new Vector2(0, (float)_minY) };
             _graphCollider!.Options = new GraphColliderOptions { Unit = unit, Offset = new Vector2(0, (float)_minY) };
