@@ -45,7 +45,7 @@ lazy_static! {
 }
 
 fn validate_equation(
-    ast: &Box<Expr>,
+    ast: &Expr,
     constants: &HashMap<String, f64>,
     variables: &HashMap<String, f64>,
     un_evaluated_variables: &HashSet<String>,
@@ -92,7 +92,7 @@ fn validate_equation(
     traverse_ast(
         ast,
         &mut |expr| {
-            if let Expr::Call(name, args) = expr.as_ref() {
+            if let Expr::Call(name, args) = expr {
                 if let Some(param_count) = FUNCTION_MAP.get(name.as_str()) {
                     if args.len() != param_count.to_owned() {
                         Diagnostic::push_new(Diagnostic::new(
@@ -135,7 +135,7 @@ fn validate_equation(
 }
 
 pub fn validate_number_equation(
-    ast: &Box<Expr>,
+    ast: &Expr,
     constants: &HashMap<String, f64>,
     variables: &HashMap<String, f64>,
     un_evaluated_variables: &HashSet<String>
@@ -150,7 +150,7 @@ pub fn validate_number_equation(
 }
 
 pub fn validate_bool_equation(
-    ast: &Box<Expr>,
+    ast: &Expr,
     constants: &HashMap<String, f64>,
     variables: &HashMap<String, f64>,
     un_evaluated_variables: &HashSet<String>
@@ -170,13 +170,13 @@ pub struct IdTable {
     pub called_ids: HashSet<String>,
 }
 
-pub fn make_id_list(ast: &Box<Expr>) -> IdTable {
+pub fn make_id_list(ast: &Expr) -> IdTable {
     let mut result = IdTable { ids: HashSet::new(), called_ids: HashSet::new() };
 
     traverse_ast(
         &ast, 
         &mut |ast| {
-            match &**ast {
+            match ast {
                 Expr::Id(id) => {
                     result.ids.insert(id.to_owned());
                 },
@@ -191,7 +191,7 @@ pub fn make_id_list(ast: &Box<Expr>) -> IdTable {
     result
 }
 
-fn count_expr_count(ast: &Box<Expr>) -> HashMap<&'static str, i32> {
+fn count_expr_count(ast: &Expr) -> HashMap<&'static str, i32> {
     let mut result = HashMap::new();
 
     traverse_ast(
@@ -204,8 +204,8 @@ fn count_expr_count(ast: &Box<Expr>) -> HashMap<&'static str, i32> {
     result
 }
 
-fn traverse_ast(ast: &Box<Expr>, func: &mut impl FnMut(&Box<Expr>)) {
-    match &**ast {
+fn traverse_ast(ast: &Expr, func: &mut impl FnMut(&Expr)) {
+    match ast {
         Expr::Id(_) => {
             func(ast);
         },

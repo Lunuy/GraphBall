@@ -28,11 +28,11 @@ impl EvalResult {
 }
 
 pub fn eval_equation(
-    ast: &Box<Expr>,
+    ast: &Expr,
     variables: &HashMap<String, f64>,
     equality_approximate_threshold: f64,
 ) -> Result<EvalResult, ()> {
-    match ast.as_ref() {
+    match ast {
         Expr::Eq(lhs, rhs) => {
             let lhs = fold_const_expr(lhs, variables);
             let rhs = fold_const_expr(rhs, variables);
@@ -87,8 +87,8 @@ pub fn eval_equation(
     }
 }
 
-pub fn fold_const_expr(ast: &Box<Expr>, variables: &HashMap<String, f64>) -> f64 {
-    match ast.as_ref() {
+pub fn fold_const_expr(ast: &Expr, variables: &HashMap<String, f64>) -> f64 {
+    match ast {
         Expr::Literal(value) => value.clone(),
         Expr::Add(lhs, rhs) => fold_const_expr(lhs, variables) + fold_const_expr(rhs, variables),
         Expr::Sub(lhs, rhs) => fold_const_expr(lhs, variables) - fold_const_expr(rhs, variables),
