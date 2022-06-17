@@ -1,61 +1,47 @@
 ﻿#nullable enable
-using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+
+using Assets.Scripts.ExprEval.Epp;
 
 namespace Assets.Scripts.ExprEval
 {
     internal struct ParseResult
     {
-        [JsonProperty("ast_id")]
-#pragma warning disable IDE0051 // Remove unused private members
-        private int AstId
-#pragma warning restore IDE0051 // Remove unused private members
-        {
-            set => EvaluableAst = value == -1 ? null : new EvaluableAst(value);
-        }
+        /// <summary>
+        /// if parse is success this value will be not null than you can evaluate equation
+        /// </summary>
+        public readonly EvaluableAst? EvaluableAst;
+        
+        /// <summary>
+        /// if parse has error or warning, this array has that info
+        /// 
+        /// this value must be readonly but performance reason, it's not immutable.
+        /// </summary>
+        public readonly Diagnostic[] Diagnostics;
 
-        [JsonIgnore]
-        public EvaluableAst? EvaluableAst;
-
-        [JsonProperty("diagnostics")]
-        public readonly ErrorInfo[] Errors;
-
-        public ParseResult(EvaluableAst? evaluableAst, ErrorInfo[] errors)
+        public ParseResult(EvaluableAst? evaluableAst, Diagnostic[] diagnostics)
         {
             EvaluableAst = evaluableAst;
-            Errors = errors;
+            Diagnostics = diagnostics;
         }
-    }
-
-    internal struct ErrorInfo
-    {
-        [JsonConverter(typeof(StringEnumConverter))]
-        [JsonProperty("level")]
-        public readonly ErrorLevel ErrorLevel;
-
-        [JsonProperty("message")]
-        public readonly string Message;
-
-        public ErrorInfo(ErrorLevel errorLevel, string message)
-        {
-            ErrorLevel = errorLevel;
-            Message = message;
-        }
-    }
-
-    internal enum ErrorLevel
-    {
-        Error,
-        Warning
     }
 
     internal static class ExprParser
     {
+        /// <summary>
+        /// parse given expression
+        /// </summary>
+        /// <param name="expr">equation expression</param>
+        /// <param name="idNames">use variable names</param>
+        /// <returns></returns>
         public static ParseResult Parse(string expr, string[] idNames)
         {
-            var jsonResult = Epp.CreateAst(expr, idNames);
-            return JsonConvert.DeserializeObject<ParseResult>(jsonResult);
+            var internalParseResult = Epp.Epp.CreateAst(expr, idNames);
+            return new ParseResult(
+                internalParseResult.AstId == -1
+                    ? null
+                    : new EvaluableAst(internalParseResult.AstId),
+                internalParseResult.Diagnostics
+            );
         }
     }
 }

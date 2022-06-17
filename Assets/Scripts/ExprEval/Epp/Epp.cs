@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Assets.Scripts.ExprEval
+namespace Assets.Scripts.ExprEval.Epp
 {
     internal struct VariablePair
     {
@@ -21,9 +21,55 @@ namespace Assets.Scripts.ExprEval
         public IntPtr Name; //c str
     }
 
+    internal unsafe struct LowParseResult
+    {
+        public int AstId;
+        public LowDiagnostic* Diagnostics;
+        public int DiagnosticsLength;
+    }
+
+    internal struct LowDiagnostic
+    {
+        public ErrorLevel Level;
+        public IntPtr Message; // c str
+        public int MessageLength;
+    }
+
+    public readonly struct ParseResult
+    {
+        public readonly int AstId;
+        public readonly Diagnostic[] Diagnostics;
+
+        public ParseResult(int astId, Diagnostic[] diagnostics)
+        {
+            AstId = astId;
+            Diagnostics = diagnostics;
+        }
+    }
+
+    public struct Diagnostic
+    {
+        public readonly ErrorLevel ErrorLevel;
+
+        public readonly string Message;
+
+        public Diagnostic(ErrorLevel errorLevel, string message)
+        {
+            ErrorLevel = errorLevel;
+            Message = message;
+        }
+    }
+
+    public enum ErrorLevel
+    {
+        Error = 0,
+        Warning = 1,
+        Note = 2
+    }
+
     public static class Epp
     {
-        public static string CreateAst(string expr, string[] idNames)
+        public static ParseResult CreateAst(string expr, string[] idNames)
         {
             var cStrExpr = Marshal.StringToCoTaskMemUTF8(expr);
             Span<IdItem> idItemList = stackalloc IdItem[idNames.Length];
@@ -38,24 +84,39 @@ namespace Assets.Scripts.ExprEval
             var idItemSize = Marshal.SizeOf(typeof(IdItem));
 
             var idItemListPtr = Marshal.AllocCoTaskMem(idItemSize * idItemList.Length);
-            for (var i = 0; i < idItemList.Length; ++i)
+            unsafe
             {
-                Marshal.StructureToPtr(idItemList[i], idItemListPtr + i * idItemSize, false);
+                var idItemListPtrCast = (IdItem*) idItemListPtr;
+                for (var i = 0; i < idItemList.Length; ++i)
+                {
+                    idItemListPtrCast[i] = idItemList[i];
+                    //Marshal.StructureToPtr(idItemList[i], idItemListPtr + i * idItemSize, false);
+                }
             }
             
-            var resultStr = Marshal.AllocCoTaskMem(1024 * 2);
 
-            create_ast(
+            var result = create_ast(
                 cStrExpr,
                 idItemList.Length,
-                idItemListPtr,
-                resultStr
+                idItemListPtr
             );
 
-            var result = Marshal.PtrToStringUTF8(resultStr)!;
+            var diagnostics = new Diagnostic[result.DiagnosticsLength];
+            for (var i = 0; i < result.DiagnosticsLength; ++i)
+            {
+                unsafe
+                {
+                    diagnostics[i] = new Diagnostic(
+                        result.Diagnostics[i].Level,
+                        Marshal.PtrToStringUTF8(
+                            result.Diagnostics[i].Message,
+                            result.Diagnostics[i].MessageLength
+                        )
+                    );
+                }
+            }
 
             //free marshal memory
-            Marshal.FreeCoTaskMem(resultStr);
             Marshal.FreeCoTaskMem(idItemListPtr);
 
             for (var i = 0; i < idItemList.Length; ++i)
@@ -64,7 +125,10 @@ namespace Assets.Scripts.ExprEval
             }
             Marshal.FreeCoTaskMem(cStrExpr);
 
-            return result;
+            return new ParseResult(
+                result.AstId,
+                diagnostics
+            );
         }
 
         public static void DisposeAst(int astId) => dispose_ast(astId);
@@ -101,8 +165,7 @@ namespace Assets.Scripts.ExprEval
             //free marshal memory
 
             Marshal.FreeCoTaskMem(variablePairArray.Pairs);
-
-            // ReSharper disable once ForCanBeConvertedToForeach
+            
             for (var i = 0; i < marshaledVariables.Length; ++i)
             {
                 Marshal.FreeCoTaskMem(marshaledVariables[i].Name);
@@ -112,11 +175,10 @@ namespace Assets.Scripts.ExprEval
         }
 
         [DllImport("epp")]
-        private static extern void create_ast(
+        private static extern LowParseResult create_ast(
             IntPtr input, // c str
             int idItemCount,
-            IntPtr idItems, // IdItem*
-            IntPtr output // c str
+            IntPtr idItems // IdItem*
         );
 
         [DllImport("epp")]

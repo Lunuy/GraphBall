@@ -8,9 +8,8 @@ pub use level::*;
 use crate::global_instance::DIAGNOSTICS;
 #[cfg(feature = "global_instance")]
 use parking_lot::MutexGuard;
-use serde::Serialize;
 
-#[derive(Debug, Clone, Hash, Serialize)]
+#[derive(Debug, Clone, Hash)]
 pub struct Diagnostic {
     level: Level,
     message: String,

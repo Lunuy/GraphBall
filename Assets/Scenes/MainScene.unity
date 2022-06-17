@@ -903,7 +903,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e16f170953fe224595941607173b9d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Expr: cos(x + t)
+  Expr: tan(x + t)
 --- !u!212 &2052265192
 SpriteRenderer:
   m_ObjectHideFlags: 0

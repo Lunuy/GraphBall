@@ -1,6 +1,7 @@
 use std::{os::raw::c_char, collections::{HashMap, HashSet}};
 
 use ast::Expr;
+use diagnostic::Diagnostic;
 use std::f64;
 
 #[repr(C)]
@@ -20,13 +21,18 @@ pub struct IdItem {
     pub name: *const c_char,
 }
 
-use serde::Serialize;
-use diagnostic::Diagnostic;
-
-#[derive(Serialize)]
+#[repr(C)]
 pub struct ParseResult {
-    pub(crate) ast_id: i32,
-    pub(crate) diagnostics: Vec<Diagnostic>,
+    pub ast_id: i32,
+    pub diagnostics: *const LowDiagnostic,
+    pub diagnostics_count: i32,
+}
+
+#[repr(C)]
+pub struct LowDiagnostic {
+    level: diagnostic::Level,
+    message: *const c_char,
+    message_length: i32,
 }
 
 static mut AST_MAP: Option<HashMap<i32, Box<Expr>>> = None;
@@ -77,9 +83,7 @@ pub extern fn create_ast(
     input: *const c_char,
     id_item_count: i32,
     id_items: *const IdItem,
-
-    output: *mut c_char,
-) {
+) -> ParseResult {
     Diagnostic::clear();
 
     let input = unsafe {
@@ -117,16 +121,18 @@ pub extern fn create_ast(
         }
     }
 
-    let serialized = serde_json::to_string(
-        &ParseResult {
-            ast_id: result,
-            diagnostics: diagnostic::Diagnostic::diagnostics().to_vec()
+    let low_diagnostics = Diagnostic::diagnostics().to_vec().iter().map(|diagnostic| {
+        LowDiagnostic {
+            level: diagnostic.level(),
+            message: diagnostic.message().as_ptr() as *const c_char,
+            message_length: diagnostic.message().len() as i32
         }
-    ).unwrap();
-    
-    unsafe {
-        let cstr = std::ffi::CString::new(serialized.as_bytes()).unwrap();
-        std::ptr::copy(cstr.as_ptr(), output, serialized.len() + 1);
+    }).collect::<Vec<_>>();
+
+    ParseResult {
+        ast_id: result,
+        diagnostics: low_diagnostics.as_ptr(),
+        diagnostics_count: low_diagnostics.len() as i32,
     }
 }
 

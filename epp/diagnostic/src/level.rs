@@ -1,8 +1,7 @@
-use serde::Serialize;
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[repr(C)]
 pub enum Level {
-    Error,
-    Warning,
-    Note,
+    Error = 0,
+    Warning = 1,
+    Note = 2,
 }
