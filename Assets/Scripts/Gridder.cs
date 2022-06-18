@@ -47,6 +47,7 @@ namespace Assets.Scripts
         private void Start()
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
+            _spriteRenderer!.sharedMaterial = new Material(_spriteRenderer.sharedMaterial);
             UpdateGrid();
         }
         

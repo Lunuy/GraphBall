@@ -79,4 +79,5 @@ Material:
     - _Offset: {r: 0, g: 0, b: 0, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _TileColor: {r: 1, g: 1, b: 1, a: 0}
+    - _Tiling: {r: 10, g: 5, b: 0, a: 0}
   m_BuildTextureStacks: []
