@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using System.Collections.Generic;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Utility
 {
     public static class ArrayPool<T>
     {
