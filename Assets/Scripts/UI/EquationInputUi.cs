@@ -29,6 +29,7 @@ namespace Assets.Scripts.UI
             EquationInputField.onValueChanged.AddListener(OnEquationInputChanged);
         }
 
+        // ReSharper disable once UnusedMember.Local
         private void Start() 
         {
             _panelShowPosition = InputPanel.anchoredPosition;
