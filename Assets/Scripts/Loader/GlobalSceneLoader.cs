@@ -130,10 +130,7 @@ namespace Assets.Scripts.Loader
 
         public static void UnRegisterSceneData(string sceneName)
         {
-            if (_instance == null)
-            {
-                throw new Exception("GlobalSceneLoader is not initialized");
-            }
+            if (_instance == null) return;
 
             if (_instance._sceneData.ContainsKey(sceneName))
             {
