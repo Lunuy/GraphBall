@@ -21,6 +21,7 @@ namespace Assets.Scripts.ExprEval.Epp
         public IntPtr Name; //c str
     }
 
+#pragma warning disable 0649
     internal unsafe struct LowParseResult
     {
         public int AstId;
@@ -34,6 +35,7 @@ namespace Assets.Scripts.ExprEval.Epp
         public IntPtr Message; // c str
         public int MessageLength;
     }
+#pragma warning restore 0649
 
     public readonly struct ParseResult
     {
