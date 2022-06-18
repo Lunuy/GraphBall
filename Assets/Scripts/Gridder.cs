@@ -22,7 +22,7 @@ namespace Assets.Scripts
         }
 
         private SpriteRenderer? _spriteRenderer;
-        private GridderOptions _options = new GridderOptions {
+        private GridderOptions _options = new() {
             MinX = 0,
             MaxX = 10,
             MinY = 0
