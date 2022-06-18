@@ -28,8 +28,8 @@ namespace Assets.Scripts
             MinY = 0
         };
 
-        private readonly int _tilingNameId = Shader.PropertyToID("_Tiling");
-        private readonly int _offsetNameId = Shader.PropertyToID("_Offset");
+        private static readonly int TilingNameId = Shader.PropertyToID("_Tiling");
+        private static readonly int OffsetNameId = Shader.PropertyToID("_Offset");
         
         private void UpdateGrid() {
             if(_spriteRenderer == null) return;
@@ -39,8 +39,8 @@ namespace Assets.Scripts
             var tiling = new Vector2((float)(_options.MaxX - _options.MinX), (float)(maxY - _options.MinY));
             var offset = new Vector2((float)_options.MinX, (float)_options.MinY);
 
-            _spriteRenderer.sharedMaterial.SetVector(_tilingNameId, tiling);
-            _spriteRenderer.sharedMaterial.SetVector(_offsetNameId, offset);
+            _spriteRenderer.sharedMaterial.SetVector(TilingNameId, tiling);
+            _spriteRenderer.sharedMaterial.SetVector(OffsetNameId, offset);
         }
         
         // ReSharper disable once UnusedMember.Local
