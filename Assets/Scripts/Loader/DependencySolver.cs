@@ -24,7 +24,6 @@ namespace Assets.Scripts.Loader
 
             public DependencyNode(string sceneName)
             {
-                Depth = 0;
                 SceneName = sceneName;
                 Children = new List<DependencyNode>();
             }
@@ -33,7 +32,6 @@ namespace Assets.Scripts.Loader
             {
                 child.Parent = this;
                 Children.Add(child);
-                child.Depth = Depth + 1;
 
                 return this;
             }
@@ -43,6 +41,17 @@ namespace Assets.Scripts.Loader
 
         static DependencySolver()
         {
+            static void BuildDepth(DependencyNode node, int depth)
+            {
+                node.Depth = depth;
+
+                for (var i = 0; i < node.Children.Count; i++)
+                {
+                    BuildDepth(node.Children[i], depth + 1);
+                }
+            }
+            BuildDepth(DependencyTree, 0);
+
             SceneNameToNode = new Dictionary<string, DependencyNode>();
             
             static void BuildSceneNameToNode(DependencyNode node)
@@ -98,25 +107,24 @@ namespace Assets.Scripts.Loader
                 }
                 else
                 {
-                    loadScenes.Push(currentNode.SceneName);
-                    currentNode = currentNode.Children[0];
-                    currentNodeDepth += 1;
+                    loadScenes.Push(targetNode.SceneName);
+                    targetNode = targetNode.Parent!;
+                    targetNodeDepth -= 1;
                 }
-            }
-
-            while (currentNode.Parent != null)
-            {
-                unloadScenes.Push(currentNode.SceneName);
-                currentNode = currentNode.Parent!;
             }
 
             while (currentNode != targetNode)
             {
-                loadScenes.Push(currentNode.SceneName);
-                currentNode = currentNode.Children[0];
+                unloadScenes.Push(currentNode.SceneName);
+                currentNode = currentNode.Parent!;
+                loadScenes.Push(targetNode.SceneName);
+                targetNode = targetNode.Parent!;
             }
 
-            return new QueryResult(unloadScenes, loadScenes);
+            var reversedUnloadScenes = new Stack<string>(unloadScenes.Count);
+            while (unloadScenes.TryPop(out var sceneName)) reversedUnloadScenes.Push(sceneName);
+
+            return new QueryResult(reversedUnloadScenes, loadScenes);
         }
     }
 }

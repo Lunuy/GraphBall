@@ -39,12 +39,11 @@ namespace Assets.Scripts.Loader
         {
             gameObject.scene.GetRootGameObjects(_rootObjects);
             SetGameObjectsActive(_rootObjects, false);
-
-            yield return null;
-            //yield return GlobalSceneLoader.InitializeLoader(gameObject.scene.name, () =>
-            //{
-            SetGameObjectsActive(_rootObjects, true);
-            //});
+            
+            yield return GlobalSceneLoader.InitializeLoader(gameObject.scene.name, () =>
+            {
+                SetGameObjectsActive(_rootObjects, true);
+            });
             _rootObjects.Clear();
 
             OnBeforeLoad.Invoke(GlobalSceneLoader.SceneData);
