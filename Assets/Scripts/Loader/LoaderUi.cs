@@ -9,7 +9,7 @@ namespace Assets.Scripts.Loader
 {
     public class LoaderUi : MonoBehaviour
     {
-        public GameObject UiRoot = null!;
+        public CanvasGroup UiRoot = null!;
         public TMP_Text LoadingTitleText = null!;
         public TMP_Text LoadingSubtitleText = null!;
 
@@ -22,22 +22,22 @@ namespace Assets.Scripts.Loader
         }
 
         private static readonly string[] LoadingTexts = {"Loading", "Loading.", "Loading..", "Loading..." };
-        private Coroutine? _currentAnimateCoroutine;
+        private Coroutine? _currentTextAnimateCoroutine;
+        private Coroutine? _currentFadeAnimateCoroutine;
 
         // ReSharper disable once UnusedMember.Local
-        private void Awake() => UiRoot.SetActive(Showing);
+        private void Awake() => UiRoot.gameObject.SetActive(Showing);
 
         public void ShowLoadingScreen()
         {
             if (Showing) return;
             Showing = true;
 
-            UiRoot.SetActive(true);
-            if (_currentAnimateCoroutine != null)
-            {
-                StopCoroutine(_currentAnimateCoroutine);
-            }
-            _currentAnimateCoroutine = StartCoroutine(AnimateLoadingText());
+            if (_currentFadeAnimateCoroutine != null) StopCoroutine(_currentFadeAnimateCoroutine);
+            _currentFadeAnimateCoroutine = StartCoroutine(ShowCanvas());
+
+            if (_currentTextAnimateCoroutine != null) StopCoroutine(_currentTextAnimateCoroutine);
+            _currentTextAnimateCoroutine = StartCoroutine(AnimateLoadingText());
         }
 
         public void HideLoadingScreen()
@@ -45,10 +45,36 @@ namespace Assets.Scripts.Loader
             if (!Showing) return;
             Showing = false;
 
-            UiRoot.SetActive(false);
-            if (_currentAnimateCoroutine == null) return;
-            StopCoroutine(_currentAnimateCoroutine);
-            _currentAnimateCoroutine = null;
+            if (_currentFadeAnimateCoroutine != null) StopCoroutine(_currentFadeAnimateCoroutine);
+            _currentFadeAnimateCoroutine = StartCoroutine(HideCanvas());
+
+            if (_currentTextAnimateCoroutine == null) return;
+            StopCoroutine(_currentTextAnimateCoroutine);
+            _currentTextAnimateCoroutine = null;
+        }
+
+        private IEnumerator ShowCanvas()
+        {
+            UiRoot.gameObject.SetActive(true);
+            for (var alpha = UiRoot.alpha; alpha < 1f; alpha += Time.deltaTime / 1f)
+            {
+                UiRoot.alpha = alpha;
+                yield return null;
+            }
+            
+            UiRoot.alpha = 1f;
+        }
+
+        private IEnumerator HideCanvas()
+        {
+            for (var alpha = UiRoot.alpha; alpha > 0f; alpha -= Time.deltaTime / 1f)
+            {
+                UiRoot.alpha = alpha;
+                yield return null;
+            }
+
+            UiRoot.alpha = 0f;
+            UiRoot.gameObject.SetActive(false);
         }
 
         private IEnumerator AnimateLoadingText()
