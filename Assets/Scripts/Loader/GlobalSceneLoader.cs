@@ -96,7 +96,7 @@ namespace Assets.Scripts.Loader
 
         private Coroutine? _loadSceneCoroutine;
 
-        public static void LoadScene(string sceneName)
+        public static bool TryLoadScene(string sceneName)
         {
             if (_instance == null)
             {
@@ -105,10 +105,11 @@ namespace Assets.Scripts.Loader
 
             if (_instance._loadSceneCoroutine != null)
             {
-                throw new Exception("Another scene is already loading");
+                return false;
             }
 
             _instance._loadSceneCoroutine = _instance.StartCoroutine(LoadSceneInternal(sceneName));
+            return true;
 
             static IEnumerator LoadSceneInternal(string sceneName)
             {
@@ -129,6 +130,7 @@ namespace Assets.Scripts.Loader
                     yield return LoadSingleScene(_instance, loadSceneName);
                 }
 
+                _instance._currentLoadedLeafScene = sceneName;
                 _instance._loaderUi.HideLoadingScreen();
 
                 _instance._loadSceneCoroutine = null;
