@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
+    // ReSharper disable once UnusedMember.Global
     public class GridRenderer : MonoBehaviour
     {
         // When added to an object, draws colored rays from the

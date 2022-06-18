@@ -1,6 +1,4 @@
 #nullable enable
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -11,6 +9,7 @@ namespace Assets.Scripts
         public double MinY;
     }
 
+    [ExecuteInEditMode]
     [RequireComponent(typeof(SpriteRenderer))]
     public class Gridder : MonoBehaviour
     {
@@ -29,27 +28,27 @@ namespace Assets.Scripts
             MinY = 0
         };
 
-        void UpdateGrid() {
+        private void UpdateGrid() {
             if(_spriteRenderer == null) return;
 
-            double maxY = _options.MinY + (_options.MaxX - _options.MinX) * (transform.localScale.y / transform.localScale.x);
+            var maxY = _options.MinY + (_options.MaxX - _options.MinX) * (transform.localScale.y / transform.localScale.x);
             
-            Vector2 tiling = new Vector2((float)(_options.MaxX - _options.MinX), (float)(maxY - _options.MinY));
-            Vector2 offset = new Vector2((float)_options.MinX, (float)_options.MinY);
+            var tiling = new Vector2((float)(_options.MaxX - _options.MinX), (float)(maxY - _options.MinY));
+            var offset = new Vector2((float)_options.MinX, (float)_options.MinY);
 
-            this._spriteRenderer.material.SetVector("_Tiling", tiling);
-            this._spriteRenderer.material.SetVector("_Offset", offset);
+            _spriteRenderer.material.SetVector("_Tiling", tiling);
+            _spriteRenderer.material.SetVector("_Offset", offset);
         }
-
-        // Start is called before the first frame update
-        void Start()
+        
+        // ReSharper disable once UnusedMember.Local
+        private void Start()
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
             UpdateGrid();
         }
-
-        // Update is called once per frame
-        void Update()
+        
+        // ReSharper disable once UnusedMember.Local
+        private void Update()
         {
             UpdateGrid();
         }
