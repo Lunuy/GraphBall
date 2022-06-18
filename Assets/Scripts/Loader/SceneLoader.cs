@@ -61,5 +61,10 @@ namespace Assets.Scripts.Loader
                 item.SetActive(value);
             }
         }
+
+        public void LoadScene(string sceneName)
+        {
+            GlobalSceneLoader.LoadScene(sceneName);
+        }
     }
 }

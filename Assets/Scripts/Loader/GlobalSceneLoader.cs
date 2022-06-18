@@ -91,31 +91,45 @@ namespace Assets.Scripts.Loader
             yield return SceneManager.UnloadSceneAsync(sceneName);
         }
 
-        public static IEnumerator LoadScene(string sceneName)
+        private Coroutine? _loadSceneCoroutine;
+
+        public static void LoadScene(string sceneName)
         {
             if (_instance == null)
             {
                 throw new Exception("GlobalSceneLoader is not initialized");
             }
 
-            _instance._loaderUi.Subtitle = "";
-            _instance._loaderUi.ShowLoadingScreen();
-
-            var queryResult = DependencySolver.Query(_instance._currentLoadedLeafScene, sceneName);
-
-            while (queryResult.UnloadScenes.Count > 0)
+            if (_instance._loadSceneCoroutine != null)
             {
-                var unloadSceneName = queryResult.UnloadScenes.Pop()!;
-                yield return UnloadSingleScene(_instance, unloadSceneName);
+                throw new Exception("Another scene is already loading");
             }
 
-            while (queryResult.LoadScenes.Count > 0)
-            {
-                var loadSceneName = queryResult.LoadScenes.Pop()!;
-                yield return LoadSingleScene(_instance, loadSceneName);
-            }
+            _instance._loadSceneCoroutine = _instance.StartCoroutine(LoadSceneInternal(sceneName));
 
-            _instance._loaderUi.HideLoadingScreen();
+            static IEnumerator LoadSceneInternal(string sceneName)
+            {
+                _instance!._loaderUi.Subtitle = "";
+                _instance._loaderUi.ShowLoadingScreen();
+
+                var queryResult = DependencySolver.Query(_instance._currentLoadedLeafScene, sceneName);
+
+                while (queryResult.UnloadScenes.Count > 0)
+                {
+                    var unloadSceneName = queryResult.UnloadScenes.Pop()!;
+                    yield return UnloadSingleScene(_instance, unloadSceneName);
+                }
+
+                while (queryResult.LoadScenes.Count > 0)
+                {
+                    var loadSceneName = queryResult.LoadScenes.Pop()!;
+                    yield return LoadSingleScene(_instance, loadSceneName);
+                }
+
+                _instance._loaderUi.HideLoadingScreen();
+
+                _instance._loadSceneCoroutine = null;
+            }
         }
 
         public static void RegisterSceneData(string sceneName, List<Object> sceneData)
