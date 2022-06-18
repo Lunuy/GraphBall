@@ -9,6 +9,7 @@ namespace Assets.Scripts.Loader
     {
         private static readonly DependencyNode DependencyTree =
             new DependencyNode("Loader")
+                .WithChild(new DependencyNode("GameMenu"))
                 .WithChild(new DependencyNode("GameUI")
                     .WithChild(new DependencyNode("MainScene"))
                     .WithChild(new DependencyNode("Level2"))
