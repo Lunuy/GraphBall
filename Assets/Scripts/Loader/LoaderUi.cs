@@ -84,7 +84,7 @@ namespace Assets.Scripts.Loader
                 for (var i = 0; i < LoadingTexts.Length; ++i)
                 {
                     LoadingTitleText.text = LoadingTexts[i];
-                    yield return YieldInstructionCache.WaitForSecondsRealtime(0.2f);
+                    yield return YieldInstructionCache.WaitForSecondsRealtime(0.5f);
                 }
             }
             // ReSharper disable once IteratorNeverReturns
