@@ -11,6 +11,9 @@ namespace Assets.Scripts.InGame
         public float CameraMinPositionX = -10;
         public float CameraMinPositionY = -10;
 
+        public float MaxOrthographicSize = 5;
+        public float MinOrthographicSize = 3;
+
         private Camera _camera = null!;
         private Vector3 _lastDragPosition;
 
@@ -30,7 +33,6 @@ namespace Assets.Scripts.InGame
                 _lastDragPosition = _camera.ScreenToViewportPoint(Input.mousePosition);
             }
 
-            // ReSharper disable once InvertIf
             if (Input.GetMouseButton(0))
             {
                 var newDragPosition = _camera.ScreenToViewportPoint(Input.mousePosition);
@@ -43,6 +45,13 @@ namespace Assets.Scripts.InGame
                 position.x = Mathf.Clamp(position.x, CameraMinPositionX, CameraMaxPositionX);
                 position.y = Mathf.Clamp(position.y, CameraMinPositionY, CameraMaxPositionY);
                 _camera.transform.position = position;
+            }
+
+            {
+                var scrollAcc = _camera.orthographicSize - Input.mouseScrollDelta.y;
+                scrollAcc = Mathf.Clamp(scrollAcc, MinOrthographicSize, MaxOrthographicSize);
+
+                _camera.orthographicSize = scrollAcc;
             }
         }
 
