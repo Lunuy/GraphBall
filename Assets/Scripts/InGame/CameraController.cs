@@ -14,7 +14,7 @@ namespace Assets.Scripts.InGame
         private Camera _camera = null!;
         private Vector3 _lastDragPosition;
 
-        public float DragScalar = 18.5f;
+        //public float DragScalar = 18.5f;
 
         // ReSharper disable once UnusedMember.Local
         private void Awake()
@@ -34,7 +34,8 @@ namespace Assets.Scripts.InGame
             if (Input.GetMouseButton(0))
             {
                 var newDragPosition = _camera.ScreenToViewportPoint(Input.mousePosition);
-                var delta = (_lastDragPosition - newDragPosition) * DragScalar;
+                var delta = _lastDragPosition - newDragPosition;
+                delta = new Vector3(delta.x * _camera.orthographicSize * _camera.aspect * 2, delta.y * _camera.orthographicSize * 2, delta.z);
                 _lastDragPosition = newDragPosition;
                 _camera.transform.position += delta;
 
