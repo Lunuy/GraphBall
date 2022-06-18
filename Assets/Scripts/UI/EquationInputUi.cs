@@ -145,9 +145,12 @@ namespace Assets.Scripts.UI
         private static IEnumerator AnimateMoveY(RectTransform transform, float target, Action? onComplete = null)
         {
             var targetVector = new Vector2(transform.anchoredPosition.x, target);
+
+            const float smoothTime = 0.3f;
+            var velocity = Vector2.zero;
             while (!Mathf.Approximately(transform.anchoredPosition.y, target))
             {
-                transform.anchoredPosition = Vector2.Lerp(transform.anchoredPosition, targetVector, Time.deltaTime * 10); 
+                transform.anchoredPosition = Vector2.SmoothDamp(transform.anchoredPosition, targetVector, ref velocity, smoothTime);
                 yield return null;
             }
             transform.anchoredPosition = targetVector;
