@@ -124,12 +124,12 @@ namespace Assets.Scripts
         public void Update() {
             var sampleUnit = new Vector2(1.0f / _graphSampler!.SampledYList.Count, 1.0f / (float)(MaxY - _minY));
 
-            _graphRenderer!.Options = new GraphRendererOptions { Unit = sampleUnit, Offset = new Vector2(0, (float)_minY) };
-            _graphCollider!.Options = new GraphColliderOptions { Unit = sampleUnit, Offset = new Vector2(0, (float)_minY) };
+            _graphRenderer!.Options = new GraphRendererOptions { Unit = sampleUnit, Offset = new Vector2(0, (float)-_minY) };
+            _graphCollider!.Options = new GraphColliderOptions { Unit = sampleUnit, Offset = new Vector2(0, (float)-_minY) };
 
             var unit = new Vector2(1.0f / (float)(_maxX - _minX), 1.0f / (float)(MaxY - _minY));
             _axisRenderer!.Options = new AxisRendererOptions {
-                Origin = new Vector2((float)_minX, (float)_minY),
+                Origin = new Vector2((float)_minX, (float)-_minY),
                 Size = new Vector2((float)(_maxX - _minX), (float)(MaxY - _minY)),
                 Unit = unit
             };

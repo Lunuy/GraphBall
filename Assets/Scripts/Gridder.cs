@@ -37,7 +37,7 @@ namespace Assets.Scripts
             var maxY = _options.MinY + (_options.MaxX - _options.MinX) * (transform.localScale.y / transform.localScale.x);
             
             var tiling = new Vector2((float)(_options.MaxX - _options.MinX), (float)(maxY - _options.MinY));
-            var offset = new Vector2((float)_options.MinX, (float)_options.MinY);
+            var offset = new Vector2((float)_options.MinX, (float)-_options.MinY);
 
             _spriteRenderer.sharedMaterial.SetVector(TilingNameId, tiling);
             _spriteRenderer.sharedMaterial.SetVector(OffsetNameId, offset);
