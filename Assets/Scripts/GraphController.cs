@@ -5,7 +5,7 @@ using System;
 
 namespace Assets.Scripts
 {
-    [RequireComponent(typeof(GraphSamplerComponent), typeof(GraphRenderer), typeof(GraphCollider)), RequireComponent(typeof(Gridder))]
+    [RequireComponent(typeof(GraphSamplerComponent), typeof(GraphRenderer), typeof(GraphCollider)), RequireComponent(typeof(Gridder), typeof(AxisRenderer))]
     public class GraphController : MonoBehaviour
     {
         private double _minX;
@@ -19,6 +19,7 @@ namespace Assets.Scripts
 
                 if (_graphSampler == null) return;
                 if (_gridder == null) return;
+                if (_axisRenderer == null) return;
                 
                 _graphSampler.Options = new GraphSamplerComponentOptions { 
                     MinX = value,
@@ -43,6 +44,7 @@ namespace Assets.Scripts
 
                 if (_graphSampler == null) return;
                 if (_gridder == null) return;
+                if (_axisRenderer == null) return;
                 
                 _graphSampler.Options = new GraphSamplerComponentOptions { 
                     MinX = _graphSampler.Options.MinX,
@@ -97,6 +99,7 @@ namespace Assets.Scripts
         private GraphRenderer? _graphRenderer;
         private GraphCollider? _graphCollider;
         private Gridder? _gridder;
+        private AxisRenderer? _axisRenderer;
 
         // ReSharper disable once UnusedMember.Global
         public void Start()
@@ -112,16 +115,24 @@ namespace Assets.Scripts
             _graphRenderer = GetComponent<GraphRenderer>();
             _graphCollider = GetComponent<GraphCollider>();
             _gridder = GetComponent<Gridder>();
+            _axisRenderer = GetComponent<AxisRenderer>();
 
             _graphSampler.OnSample += OnSample;
         }
         
         // ReSharper disable once UnusedMember.Global
         public void Update() {
-            var unit = new Vector2(1.0f / _graphSampler!.SampledYList.Count, 1.0f / (float)(MaxY - _minY));
+            var sampleUnit = new Vector2(1.0f / _graphSampler!.SampledYList.Count, 1.0f / (float)(MaxY - _minY));
 
-            _graphRenderer!.Options = new GraphRendererOptions { Unit = unit, Offset = new Vector2(0, (float)_minY) };
-            _graphCollider!.Options = new GraphColliderOptions { Unit = unit, Offset = new Vector2(0, (float)_minY) };
+            _graphRenderer!.Options = new GraphRendererOptions { Unit = sampleUnit, Offset = new Vector2(0, (float)_minY) };
+            _graphCollider!.Options = new GraphColliderOptions { Unit = sampleUnit, Offset = new Vector2(0, (float)_minY) };
+
+            var unit = new Vector2(1.0f / (float)(_maxX - _minX), 1.0f / (float)(MaxY - _minY));
+            _axisRenderer!.Options = new AxisRendererOptions {
+                Origin = new Vector2((float)_minX, (float)_minY),
+                Size = new Vector2((float)(_maxX - _minX), (float)(MaxY - _minY)),
+                Unit = unit
+            };
         }
 
         private readonly List<double> _validatedYArray = new();
