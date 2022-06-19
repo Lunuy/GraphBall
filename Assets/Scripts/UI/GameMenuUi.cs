@@ -15,7 +15,7 @@ namespace Assets.Scripts.UI
         private void Start()
         {
             _levelSelectPanelOpenPosition = LevelSelectPanel.anchoredPosition;
-            LevelSelectPanel.anchoredPosition = _levelSelectPanelOpenPosition + Vector2.down * 1000;
+            LevelSelectPanel.anchoredPosition = _levelSelectPanelOpenPosition + Vector2.down * LevelSelectPanel.rect.height;
         }
 
         // ReSharper disable once UnusedMember.Local
