@@ -90,7 +90,6 @@ namespace Assets.Scripts.Loader
         {
             globalSceneLoader._loaderUi.Subtitle = $"Unloading {sceneName}";
             yield return new WaitForSecondsRealtime(0.5f);
-            Debug.Log(sceneName);
             yield return SceneManager.UnloadSceneAsync(sceneName);
         }
 

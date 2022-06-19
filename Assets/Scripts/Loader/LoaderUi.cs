@@ -77,6 +77,8 @@ namespace Assets.Scripts.Loader
             UiRoot.gameObject.SetActive(false);
         }
 
+        private readonly WaitForSecondsRealtime _waitForSecondsRealtime = new(0.5f);
+
         private IEnumerator AnimateLoadingText()
         {
             for (;;)
@@ -84,7 +86,8 @@ namespace Assets.Scripts.Loader
                 for (var i = 0; i < LoadingTexts.Length; ++i)
                 {
                     LoadingTitleText.text = LoadingTexts[i];
-                    yield return YieldInstructionCache.WaitForSecondsRealtime(0.5f);
+                    _waitForSecondsRealtime.Reset();
+                    yield return _waitForSecondsRealtime;
                 }
             }
             // ReSharper disable once IteratorNeverReturns
