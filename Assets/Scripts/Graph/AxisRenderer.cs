@@ -15,8 +15,6 @@ namespace Assets.Scripts.Graph
     [ExecuteInEditMode]
     public class AxisRenderer : MonoBehaviour
     {
-        public GameObject? LinePrefab;
-
         public AxisRendererOptions Options {
             get => _options;
             set {
@@ -26,28 +24,24 @@ namespace Assets.Scripts.Graph
         }
 
         private AxisRendererOptions _options;
-        private GameObject? _xAxisGameObject;
-        private GameObject? _yAxisGameObject;
+        public GameObject XAxisGameObject = null!;
+        public GameObject YAxisGameObject = null!;
         private LineRenderer? _xAxisLineRenderer;
         private LineRenderer? _yAxisLineRenderer;
         
         // ReSharper disable once UnusedMember.Local
         private void Start()
         {
-            if(LinePrefab == null) return;
-
             // Create axis line
-            _xAxisGameObject = Instantiate(LinePrefab);
-            _yAxisGameObject = Instantiate(LinePrefab);
-            _xAxisGameObject.transform.SetParent(this.transform);
-            _yAxisGameObject.transform.SetParent(this.transform);
-            _xAxisGameObject.transform.localPosition = new Vector3(0, 0, 1);
-            _yAxisGameObject.transform.localPosition = new Vector3(0, 0, 1);
-            _xAxisGameObject.transform.localScale = Vector2.one;
-            _yAxisGameObject.transform.localScale = Vector2.one;
+            XAxisGameObject.transform.SetParent(transform);
+            YAxisGameObject.transform.SetParent(transform);
+            XAxisGameObject.transform.localPosition = new Vector3(0, 0, 1);
+            YAxisGameObject.transform.localPosition = new Vector3(0, 0, 1);
+            XAxisGameObject.transform.localScale = Vector2.one;
+            YAxisGameObject.transform.localScale = Vector2.one;
 
-            _xAxisLineRenderer = _xAxisGameObject.GetComponent<LineRenderer>();
-            _yAxisLineRenderer = _yAxisGameObject.GetComponent<LineRenderer>();
+            _xAxisLineRenderer = XAxisGameObject.GetComponent<LineRenderer>();
+            _yAxisLineRenderer = YAxisGameObject.GetComponent<LineRenderer>();
             _xAxisLineRenderer.useWorldSpace = false;
             _yAxisLineRenderer.useWorldSpace = false;
 
@@ -56,14 +50,15 @@ namespace Assets.Scripts.Graph
         }
 
         // ReSharper disable once UnusedMember.Local
-        private void Update() {
-            // _xAxisGameObject!.transform.position = this.transform.position;
-            // _yAxisGameObject!.transform.position = this.transform.position;
-            // _xAxisGameObject.transform.rotation = this.transform.rotation;
-            // _yAxisGameObject.transform.rotation = this.transform.rotation;
-            // _xAxisGameObject.transform.localScale = this.transform.localScale;
-            // _yAxisGameObject.transform.localScale = this.transform.localScale;
-        }
+        //private void Update()
+        //{
+        //    _xAxisGameObject!.transform.position = this.transform.position;
+        //    _yAxisGameObject!.transform.position = this.transform.position;
+        //    _xAxisGameObject.transform.rotation = this.transform.rotation;
+        //    _yAxisGameObject.transform.rotation = this.transform.rotation;
+        //    _xAxisGameObject.transform.localScale = this.transform.localScale;
+        //    _yAxisGameObject.transform.localScale = this.transform.localScale;
+        //}
 
         private void RenderAxis() {
             if(_xAxisLineRenderer == null) return;
