@@ -49,7 +49,10 @@ namespace Assets.Scripts.UI
         // ReSharper disable once UnusedMember.Local
         private void OnDestroy()
         {
-            EquationInputField.onValueChanged.RemoveListener(OnEquationInputChanged);
+            if (EquationInputField)
+            {
+                EquationInputField.onValueChanged.RemoveListener(OnEquationInputChanged);
+            }
 
             InputPanel = null!;
             EquationInputField = null!;
