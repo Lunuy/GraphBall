@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.UI
 {
+    // ReSharper disable once UnusedMember.Global
     public class GameMenuUi : MonoBehaviour
     {
         public RectTransform LevelSelectPanel = null!;
@@ -15,16 +16,24 @@ namespace Assets.Scripts.UI
         private void Start()
         {
             _levelSelectPanelOpenPosition = LevelSelectPanel.anchoredPosition;
-            LevelSelectPanel.anchoredPosition = _levelSelectPanelOpenPosition + Vector2.down * LevelSelectPanel.rect.height;
         }
 
         // ReSharper disable once UnusedMember.Local
         private void Update()
         {
-            if (!Input.anyKeyDown) return;
-            if (_selectLevelOpened) return;
-            _selectLevelOpened = true;
-            StartCoroutine(AnimateMoveY(LevelSelectPanel, _levelSelectPanelOpenPosition.y));
+            if (Input.anyKeyDown)
+            {
+                if (!_selectLevelOpened)
+                {
+                    _selectLevelOpened = true;
+                    StartCoroutine(AnimateMoveY(LevelSelectPanel, _levelSelectPanelOpenPosition.y));
+                }
+            }
+
+            if (!_selectLevelOpened)
+            {
+                LevelSelectPanel.anchoredPosition = _levelSelectPanelOpenPosition + Vector2.down * LevelSelectPanel.rect.height;
+            }
         }
 
         private static IEnumerator AnimateMoveY(RectTransform transform, float target)
