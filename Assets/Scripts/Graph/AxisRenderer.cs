@@ -37,6 +37,7 @@ namespace Assets.Scripts
         {
             if(LinePrefab == null) return;
 
+            // Create axis line
             _xAxisGameObject = Instantiate(LinePrefab);
             _yAxisGameObject = Instantiate(LinePrefab);
             _xAxisGameObject.transform.SetParent(this.transform);
@@ -50,6 +51,7 @@ namespace Assets.Scripts
             _yAxisLineRenderer = _yAxisGameObject.GetComponent<LineRenderer>();
             _xAxisLineRenderer.useWorldSpace = false;
             _yAxisLineRenderer.useWorldSpace = false;
+
 
             RenderAxis();
         }
