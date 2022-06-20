@@ -19,12 +19,12 @@ namespace Assets.Scripts
             var parseResult = ExprParser.Parse(Expr, new[] { "x", "t" });
 
             _graphSampler = GetComponent<GraphSamplerComponent>();
-            _graphSampler.Variables = new double[]{0};
+            _graphSampler.Variables = new (string, double)[]{("t", 0)};
             _graphSampler.Function = (t, x) =>
             {
                 var variables = ArrayPool<(string, double)>.Rent(2);
                 variables[0] = ("x", x);
-                variables[1] = ("t", t[0]);
+                variables[1] = ("t", t[0].Item2);
                 var result = parseResult.EvaluableAst!.Eval(variables);
                 ArrayPool<(string, double)>.Return(variables);
                 return result;
@@ -34,10 +34,10 @@ namespace Assets.Scripts
         // ReSharper disable once UnusedMember.Local
         private void Update()
         {
-            var variables = ArrayPool<double>.Rent(1);
-            variables[0] = _graphSampler!.GetVariablesNth(0) + Time.deltaTime * 2;
+            var variables = ArrayPool<(string, double)>.Rent(1);
+            variables[0] = ("t", _graphSampler!.GetVariablesNth(0).Item2 + Time.deltaTime * 2);
             _graphSampler.Variables = variables;
-            ArrayPool<double>.Return(variables);
+            ArrayPool<(string, double)>.Return(variables);
         }
     }
 }
