@@ -424,12 +424,16 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5250121344095000716, guid: bb6d307774f4f364ca375ae31ea6026a, type: 3}
       propertyPath: SceneData.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5250121344095000716, guid: bb6d307774f4f364ca375ae31ea6026a, type: 3}
       propertyPath: SceneData.Array.data[0]
       value: 
       objectReference: {fileID: 1627396926}
+    - target: {fileID: 5250121344095000716, guid: bb6d307774f4f364ca375ae31ea6026a, type: 3}
+      propertyPath: SceneData.Array.data[1]
+      value: 
+      objectReference: {fileID: 95031426}
     - target: {fileID: 5250121344095000717, guid: bb6d307774f4f364ca375ae31ea6026a, type: 3}
       propertyPath: m_RootOrder
       value: 0
