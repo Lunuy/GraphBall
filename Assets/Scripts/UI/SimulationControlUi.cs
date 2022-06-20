@@ -24,6 +24,16 @@ namespace Assets.Scripts.UI
             Paused
         }
 
+        public bool CanPlay
+        {
+            get => _canPlay;
+            set
+            {
+                _canPlay = value;
+                PlayButton.interactable = value;
+            }
+        }
+
         private ControlState _state = ControlState.Stopped;
         private bool _canPlay = true;
 
@@ -47,22 +57,50 @@ namespace Assets.Scripts.UI
 
         private void OnPlayButtonClick()
         {
+            if (_state is not ControlState.Stopped) return;
+            _state = ControlState.Playing;
 
+            PlayButton.gameObject.SetActive(false);
+            StopButton.gameObject.SetActive(true);
+            PauseButton.gameObject.SetActive(true);
+            ResumeButton.gameObject.SetActive(false);
+            OnPlayButtonClicked.Invoke();
         }
 
         private void OnStopButtonClick()
         {
+            if (_state is not (ControlState.Playing or ControlState.Paused)) return;
+            _state = ControlState.Stopped;
 
+            PlayButton.gameObject.SetActive(true);
+            StopButton.gameObject.SetActive(false);
+            PauseButton.gameObject.SetActive(false);
+            ResumeButton.gameObject.SetActive(false);
+            OnStopButtonClicked.Invoke();
         }
 
         private void OnPauseButtonClick()
         {
-            
+            if (_state is not ControlState.Playing) return;
+            _state = ControlState.Paused;
+
+            PlayButton.gameObject.SetActive(false);
+            StopButton.gameObject.SetActive(true);
+            PauseButton.gameObject.SetActive(false);
+            ResumeButton.gameObject.SetActive(true);
+            OnPauseButtonClicked.Invoke();
         }
 
         private void OnResumeButtonClick()
         {
+            if (_state is not ControlState.Paused) return;
+            _state = ControlState.Playing;
 
+            PlayButton.gameObject.SetActive(false);
+            StopButton.gameObject.SetActive(true);
+            PauseButton.gameObject.SetActive(true);
+            ResumeButton.gameObject.SetActive(false);
+            OnResumeButtonClicked.Invoke();
         }
     }
 }
