@@ -13,6 +13,9 @@ namespace Assets.Scripts.InGame
         public event SimulationEvent OnSimulationFailure = () => { };
         public event SimulationEvent OnSimulationSuccess = () => { };
         public event VariableUpdate OnVariableUpdate = (variables) => { };
+        
+        abstract public (string, double)[] GetInitialVariables();
+
         public bool IsRunning { get; private set; }
         virtual public void StartSimulation() {
             OnSimulationStart?.Invoke();
@@ -21,6 +24,9 @@ namespace Assets.Scripts.InGame
         virtual public void ResetSimulation() {
             OnSimulationReset?.Invoke();
             IsRunning = false;
+        }
+        public void VariableUpdate((string, double)[] variables) {
+            OnVariableUpdate?.Invoke(variables);
         }
         public void Success() {
             OnSimulationSuccess?.Invoke();

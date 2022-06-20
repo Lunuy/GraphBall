@@ -14,12 +14,24 @@ namespace Assets.Scripts.Game
         public GameObject? Target;
 
         public Vector3 BallInitialPosition;
+        
+        private double _t = 0;
+
+        override public (string, double)[] GetInitialVariables() {
+            return new (string, double)[] { ("t", _t) };
+        }
 
         public void Start() {
             if(CollisionEventer == null) {
                 throw new Exception("CollisionEventer is null");
             }
             CollisionEventer.OnCollisionEnter_ += _onCollide;
+        }
+
+        public void Update() {
+            _t += Time.deltaTime;
+
+            VariableUpdate(new (string, double)[]{("t", _t)});
         }
 
         public void OnDestroy() {
@@ -48,6 +60,7 @@ namespace Assets.Scripts.Game
 
             base.StartSimulation();
             Ball.transform.position = BallInitialPosition;
+            _t = 0;
         }
 
         override public void ResetSimulation() {

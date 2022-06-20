@@ -46,8 +46,6 @@ namespace Assets.Scripts.Graph.Selection
             var parseResult = ExprParser.Parse(exprInput, variables);
             ArrayPool<string>.Return(variables);
 
-            
-                Debug.Log("A");
 
             if(parseResult.EvaluableAst == null) {
                 var diagnosticsList = new List<string>();
@@ -57,14 +55,11 @@ namespace Assets.Scripts.Graph.Selection
                 
                 EquationInputContext.ErrorList = diagnosticsList;
 
-                Debug.Log("B");
-
                 return;
             } else {
                 EquationInputContext.ErrorList = new List<string>();
             }
 
-                Debug.Log("C");
             GraphSampler.Function = (t, x) =>
             {
                 var variables = ArrayPool<(string, double)>.Rent(t.Length + 1);

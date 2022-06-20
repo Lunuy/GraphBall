@@ -10,7 +10,7 @@ using Assets.Scripts.Utility;
 namespace Assets.Scripts.InGame
 {
 
-    public abstract class SimulationClient : MonoBehaviour
+    public class SimulationClient : MonoBehaviour
     {
         public GraphSamplerComponent? GraphSampler;
 
@@ -20,8 +20,12 @@ namespace Assets.Scripts.InGame
             if(Simulation == null) {
                 throw new Exception("Simulation is null");
             }
+            if(GraphSampler == null) {
+                throw new Exception("GraphSampler is null");
+            }
 
             Simulation.OnVariableUpdate += _onVariableUpdate;
+            GraphSampler.Variables = Simulation.GetInitialVariables();
         }
 
         public void OnDestroy() {
