@@ -37,13 +37,6 @@ namespace Assets.Scripts.UI
             if (_equationInputContext != null) return;
             InputPanel.anchoredPosition = _panelShowPosition + Vector2.down * HideHeight;
             InputPanel.gameObject.SetActive(false);
-
-            //ChangeContext(new EquationInputContext
-            //{
-            //    ErrorList = new List<string> {"Error: a", "Error: b"},
-            //    InputEquation = "cos(x)",
-            //    MaxCharacterCount = 10
-            //});
         }
 
         // ReSharper disable once UnusedMember.Local
