@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Graph
 {
     public struct GraphSamplerComponentOptions
     {

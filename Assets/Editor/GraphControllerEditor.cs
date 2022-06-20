@@ -1,5 +1,5 @@
 #nullable enable
-using Assets.Scripts;
+using Assets.Scripts.Graph;
 using UnityEditor;
 
 namespace Assets.Editor

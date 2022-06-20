@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Graph
 {
     [RequireComponent(typeof(GraphSamplerComponent), typeof(GraphRenderer), typeof(GraphCollider)), RequireComponent(typeof(Gridder), typeof(AxisRenderer))]
     public class GraphController : MonoBehaviour

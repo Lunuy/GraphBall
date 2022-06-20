@@ -1,7 +1,7 @@
 #nullable enable
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Graph
 {
     public struct GridderOptions {
         public double MinX;

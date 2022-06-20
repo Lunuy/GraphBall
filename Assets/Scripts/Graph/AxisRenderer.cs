@@ -5,7 +5,7 @@ using UnityEngine;
 using Unity.Collections;
 
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Graph
 {
     public struct AxisRendererOptions
     {
