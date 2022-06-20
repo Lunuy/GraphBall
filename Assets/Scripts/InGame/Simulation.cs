@@ -1,37 +1,32 @@
 #nullable enable
 using UnityEngine;
-using UnityEngine.Events;
-using Assets.Scripts.Graph.Selection;
-using System;
 
 namespace Assets.Scripts.InGame
 {
-    public delegate void SimulationEnd();
+    public delegate void SimulationEvent();
+    public delegate void VariableUpdate((string, double)[] variables);
 
     public abstract class Simulation : MonoBehaviour
     {
-        abstract public event SimulationEnd OnSimulationFailure;
-        abstract public event SimulationEnd OnSimulationSuccess;
-
-        public GraphEditManager? GraphEditManager;
+        public event SimulationEvent OnSimulationStart = () => { };
+        public event SimulationEvent OnSimulationReset = () => { };
+        public event SimulationEvent OnSimulationFailure = () => { };
+        public event SimulationEvent OnSimulationSuccess = () => { };
+        public event VariableUpdate OnVariableUpdate = (variables) => { };
         public bool IsRunning { get; private set; }
-
         virtual public void StartSimulation() {
-            if(GraphEditManager == null) {
-                throw new Exception("GraphEditManager is null");
-            }
-
-            GraphEditManager.IsEditable = false;
+            OnSimulationStart?.Invoke();
             IsRunning = true;
         }
-
         virtual public void ResetSimulation() {
-            if(GraphEditManager == null) {
-                throw new Exception("GraphEditManager is null");
-            }
-            
-            GraphEditManager.IsEditable = true;
+            OnSimulationReset?.Invoke();
             IsRunning = false;
+        }
+        public void Success() {
+            OnSimulationSuccess?.Invoke();
+        }
+        public void Failure() {
+            OnSimulationFailure?.Invoke();
         }
     }
 }

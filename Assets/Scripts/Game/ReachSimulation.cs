@@ -9,9 +9,6 @@ namespace Assets.Scripts.Game
 
     public class ReachSimulation : Simulation
     {
-        override public event SimulationEnd OnSimulationFailure = delegate {  };
-        override public event SimulationEnd OnSimulationSuccess = delegate {  };
-
         public CollisionEventer? CollisionEventer;
         public GameObject? Ball;
         public GameObject? Target;
@@ -36,10 +33,10 @@ namespace Assets.Scripts.Game
         private void _onCollide(Collision2D collision) {
             if(IsRunning) {
                 if(collision.gameObject == Target) {
-                    OnSimulationSuccess();
+                    Success();
                 }
                 else {
-                    OnSimulationFailure();
+                    Failure();
                 }
             }
         }

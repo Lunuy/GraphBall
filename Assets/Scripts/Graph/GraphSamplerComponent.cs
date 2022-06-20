@@ -35,11 +35,11 @@ namespace Assets.Scripts.Graph
 
         private GraphSamplerComponentOptions _options;
 
-        public double[] Variables
+        public (string, double)[] Variables
         {
             get
             {
-                var variables = new double[_variables.Length];
+                var variables = new (string, double)[_variables.Length];
                 Array.Copy(_variables, variables, _variables.Length);
                 return variables;
             }
@@ -47,19 +47,19 @@ namespace Assets.Scripts.Graph
             {
                 if (value.Length != _variables.Length)
                 {
-                    _variables = new double[value.Length];
+                    _variables = new (string, double)[value.Length];
                 }
                 Array.Copy(value, _variables, value.Length);
                 Sample();
             }
         }
 
-        public double GetVariablesNth(int index) => _variables[index];
+        public (string, double) GetVariablesNth(int index) => _variables[index];
         public double GetVariablesLength() => _variables.Length;
 
         public IReadOnlyList<double> SampledYList => _sampledYList;
 
-        public Func<double[], double, double> Function
+        public Func<(string, double)[], double, double> Function
         {
             get => _graphSampler.Function;
             set
@@ -71,8 +71,8 @@ namespace Assets.Scripts.Graph
 
         private Func<double[], double, double> _function = (t, x) => x * x * 0.1;
         private readonly List<double> _sampledYList = new();
-        private GraphSampler<double[]> _graphSampler = new(0, 0, 1, (t, x) => x);
-        private double[] _variables = { };
+        private GraphSampler<(string, double)[]> _graphSampler = new(0, 0, 1, (t, x) => x);
+        private (string, double)[] _variables = { };
 
         private void Sample()
         {
