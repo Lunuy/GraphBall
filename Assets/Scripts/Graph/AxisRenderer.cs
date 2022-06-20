@@ -1,6 +1,4 @@
 #nullable enable
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Collections;
 
@@ -14,6 +12,7 @@ namespace Assets.Scripts.Graph
         public Vector2 Origin;
     }
 
+    [ExecuteInEditMode]
     public class AxisRenderer : MonoBehaviour
     {
         public GameObject? LinePrefab;
@@ -31,9 +30,9 @@ namespace Assets.Scripts.Graph
         private GameObject? _yAxisGameObject;
         private LineRenderer? _xAxisLineRenderer;
         private LineRenderer? _yAxisLineRenderer;
-
-        // Start is called before the first frame update
-        void Start()
+        
+        // ReSharper disable once UnusedMember.Local
+        private void Start()
         {
             if(LinePrefab == null) return;
 
@@ -56,7 +55,8 @@ namespace Assets.Scripts.Graph
             RenderAxis();
         }
 
-        void Update() {
+        // ReSharper disable once UnusedMember.Local
+        private void Update() {
             // _xAxisGameObject!.transform.position = this.transform.position;
             // _yAxisGameObject!.transform.position = this.transform.position;
             // _xAxisGameObject.transform.rotation = this.transform.rotation;
@@ -65,7 +65,7 @@ namespace Assets.Scripts.Graph
             // _yAxisGameObject.transform.localScale = this.transform.localScale;
         }
 
-        void RenderAxis() {
+        private void RenderAxis() {
             if(_xAxisLineRenderer == null) return;
             if(_yAxisLineRenderer == null) return;
 

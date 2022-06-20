@@ -5,6 +5,7 @@ using System;
 
 namespace Assets.Scripts.Graph
 {
+    [ExecuteInEditMode]
     [RequireComponent(typeof(GraphSamplerComponent), typeof(GraphRenderer), typeof(GraphCollider)), RequireComponent(typeof(Gridder), typeof(AxisRenderer))]
     public class GraphController : MonoBehaviour
     {
