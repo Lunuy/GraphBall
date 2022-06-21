@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 namespace Assets.Scripts.InGame
 {
     [RequireComponent(typeof(Camera))]
+    // ReSharper disable once UnusedMember.Global
     internal class CameraController : MonoBehaviour
     {
         public float CameraMaxPositionX = 10;
@@ -29,23 +30,49 @@ namespace Assets.Scripts.InGame
         // ReSharper disable once UnusedMember.Local
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+            if (EventSystem.current.IsPointerOverGameObject()) return;
+
+            // Pinch to zoom
+            if (Input.touchCount == 2)
             {
-                _lastDragPosition = _camera.ScreenToViewportPoint(Input.mousePosition);
+
+                // get current touch positions
+                var tZero = Input.GetTouch(0);
+                var tOne = Input.GetTouch(1);
+                // get touch position from the previous frame
+                var tZeroPrevious = tZero.position - tZero.deltaPosition;
+                var tOnePrevious = tOne.position - tOne.deltaPosition;
+
+                var oldTouchDistance = Vector2.Distance(tZeroPrevious, tOnePrevious);
+                var currentTouchDistance = Vector2.Distance(tZero.position, tOne.position);
+
+                // get offset value
+                var deltaDistance = oldTouchDistance - currentTouchDistance;
+                var scrollAcc = _camera.orthographicSize + deltaDistance;
+                scrollAcc = Mathf.Clamp(scrollAcc, MinOrthographicSize, MaxOrthographicSize);
+
+                _camera.orthographicSize = scrollAcc;
             }
-
-            if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
+            else
             {
-                var newDragPosition = _camera.ScreenToViewportPoint(Input.mousePosition);
-                var delta = _lastDragPosition - newDragPosition;
-                delta = new Vector3(delta.x * _camera.orthographicSize * _camera.aspect * 2, delta.y * _camera.orthographicSize * 2, delta.z);
-                _lastDragPosition = newDragPosition;
-                _camera.transform.position += delta;
+                if (Input.GetMouseButtonDown(0))
+                {
+                    _lastDragPosition = _camera.ScreenToViewportPoint(Input.mousePosition);
+                }
 
-                var position = _camera.transform.position;
-                position.x = Mathf.Clamp(position.x, CameraMinPositionX, CameraMaxPositionX);
-                position.y = Mathf.Clamp(position.y, CameraMinPositionY, CameraMaxPositionY);
-                _camera.transform.position = position;
+                if (Input.GetMouseButton(0))
+                {
+                    var newDragPosition = _camera.ScreenToViewportPoint(Input.mousePosition);
+                    var delta = _lastDragPosition - newDragPosition;
+                    delta = new Vector3(delta.x * _camera.orthographicSize * _camera.aspect * 2, delta.y * _camera.orthographicSize * 2, delta.z);
+                    _lastDragPosition = newDragPosition;
+                    _camera.transform.position += delta;
+
+                    var position = _camera.transform.position;
+                    position.x = Mathf.Clamp(position.x, CameraMinPositionX, CameraMaxPositionX);
+                    position.y = Mathf.Clamp(position.y, CameraMinPositionY, CameraMaxPositionY);
+                    _camera.transform.position = position;
+                }
             }
 
             {
