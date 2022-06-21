@@ -40,7 +40,7 @@ namespace Assets.Scripts.UI
         {
             const float smoothTime = 0.3f;
             var velocity = Vector2.zero;
-            while (transform.anchoredPosition != target)
+            while (0.001 < (transform.anchoredPosition - target).sqrMagnitude)
             {
                 transform.anchoredPosition = Vector2.SmoothDamp(transform.anchoredPosition, target, ref velocity, smoothTime);
                 yield return null;

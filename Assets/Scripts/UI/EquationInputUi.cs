@@ -32,7 +32,6 @@ namespace Assets.Scripts.UI
         // ReSharper disable once UnusedMember.Local
         private void Start() 
         {
-            Debug.Log("a");
             _panelShowPosition = InputPanel.anchoredPosition;
 
             if (_equationInputContext != null) return;
@@ -119,13 +118,16 @@ namespace Assets.Scripts.UI
             }
         }
 
+        private Coroutine? _animationCoroutine;
+
         private void ShowUi()
         {
             if (_showing) return;
             _showing = true;
 
             InputPanel.gameObject.SetActive(true);
-            StartCoroutine(AnimateMoveY(InputPanel, _panelShowPosition));
+            if (_animationCoroutine != null) StopCoroutine(_animationCoroutine);
+            _animationCoroutine = StartCoroutine(AnimateMoveY(InputPanel, _panelShowPosition));
         }
 
         private void HideUi()
@@ -133,7 +135,8 @@ namespace Assets.Scripts.UI
             if (!_showing) return;
             _showing = false;
 
-            StartCoroutine(AnimateMoveY(InputPanel, _panelShowPosition + Vector2.down * HideHeight, () =>
+            if (_animationCoroutine != null) StopCoroutine(_animationCoroutine);
+            _animationCoroutine = StartCoroutine(AnimateMoveY(InputPanel, _panelShowPosition + Vector2.down * HideHeight, () =>
             {
                 InputPanel.gameObject.SetActive(false);
             }));
@@ -143,7 +146,7 @@ namespace Assets.Scripts.UI
         {
             const float smoothTime = 0.3f;
             var velocity = Vector2.zero;
-            while (transform.anchoredPosition != target)
+            while (0.01 < (transform.anchoredPosition - target).sqrMagnitude)
             {
                 transform.anchoredPosition = Vector2.SmoothDamp(transform.anchoredPosition, target, ref velocity, smoothTime);
                 yield return null;
