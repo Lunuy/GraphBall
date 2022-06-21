@@ -33,6 +33,8 @@ namespace Assets.Scripts.Graph.Selection
 
             GraphEditManager.AddClient(this);
             EquationInputContext.OnInputChanged = _onInputChanged;
+
+            _onInputChanged("0");
         }
 
         private void _onInputChanged(String exprInput) {
