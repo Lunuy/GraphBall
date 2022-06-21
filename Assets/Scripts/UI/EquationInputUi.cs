@@ -32,6 +32,7 @@ namespace Assets.Scripts.UI
         // ReSharper disable once UnusedMember.Local
         private void Start() 
         {
+            Debug.Log("a");
             _panelShowPosition = InputPanel.anchoredPosition;
 
             if (_equationInputContext != null) return;
@@ -124,7 +125,7 @@ namespace Assets.Scripts.UI
             _showing = true;
 
             InputPanel.gameObject.SetActive(true);
-            StartCoroutine(AnimateMoveY(InputPanel, _panelShowPosition.y));
+            StartCoroutine(AnimateMoveY(InputPanel, _panelShowPosition));
         }
 
         private void HideUi()
@@ -132,24 +133,22 @@ namespace Assets.Scripts.UI
             if (!_showing) return;
             _showing = false;
 
-            StartCoroutine(AnimateMoveY(InputPanel, _panelShowPosition.y + HideHeight, () =>
+            StartCoroutine(AnimateMoveY(InputPanel, _panelShowPosition + Vector2.down * HideHeight, () =>
             {
                 InputPanel.gameObject.SetActive(false);
             }));
         }
 
-        private static IEnumerator AnimateMoveY(RectTransform transform, float target, Action? onComplete = null)
+        private static IEnumerator AnimateMoveY(RectTransform transform, Vector2 target, Action? onComplete = null)
         {
-            var targetVector = new Vector2(transform.anchoredPosition.x, target);
-
             const float smoothTime = 0.3f;
             var velocity = Vector2.zero;
-            while (!Mathf.Approximately(transform.anchoredPosition.y, target))
+            while (transform.anchoredPosition != target)
             {
-                transform.anchoredPosition = Vector2.SmoothDamp(transform.anchoredPosition, targetVector, ref velocity, smoothTime);
+                transform.anchoredPosition = Vector2.SmoothDamp(transform.anchoredPosition, target, ref velocity, smoothTime);
                 yield return null;
             }
-            transform.anchoredPosition = targetVector;
+            transform.anchoredPosition = target;
 
             onComplete?.Invoke();
         }

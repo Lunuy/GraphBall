@@ -12,11 +12,15 @@ namespace Assets.Scripts.InGame
 
         public Simulation? Simulation;
 
-        public void Start() {
-            if(Simulation == null) {
+        public void Start()
+        {
+            if (Simulation == null)
+            {
                 throw new Exception("Simulation is null");
             }
-            if(GraphSampler == null) {
+
+            if (GraphSampler == null)
+            {
                 throw new Exception("GraphSampler is null");
             }
 
@@ -24,19 +28,21 @@ namespace Assets.Scripts.InGame
             GraphSampler.Variables = Simulation.GetInitialVariables();
         }
 
-        public void OnDestroy() {
-            if(Simulation == null) {
-                throw new Exception("Simulation is null");
+        public void OnDestroy()
+        {
+            if (Simulation != null)
+            {
+                Simulation.OnVariableUpdate -= OnVariableUpdate;
             }
-
-            Simulation.OnVariableUpdate -= OnVariableUpdate;
         }
 
-        private void OnVariableUpdate((string, double)[] variables) {
-            if(GraphSampler == null) {
+        private void OnVariableUpdate((string, double)[] variables)
+        {
+            if (GraphSampler == null)
+            {
                 throw new Exception("GraphSampler is null");
             }
-            
+
             GraphSampler.Variables = variables;
         }
     }

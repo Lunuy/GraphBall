@@ -26,7 +26,7 @@ namespace Assets.Scripts.UI
                 if (!_selectLevelOpened)
                 {
                     _selectLevelOpened = true;
-                    StartCoroutine(AnimateMoveY(LevelSelectPanel, _levelSelectPanelOpenPosition.y));
+                    StartCoroutine(AnimateMoveY(LevelSelectPanel, _levelSelectPanelOpenPosition));
                 }
             }
 
@@ -36,18 +36,16 @@ namespace Assets.Scripts.UI
             }
         }
 
-        private static IEnumerator AnimateMoveY(RectTransform transform, float target)
+        private static IEnumerator AnimateMoveY(RectTransform transform, Vector2 target)
         {
-            var targetVector = new Vector2(transform.anchoredPosition.x, target);
-
             const float smoothTime = 0.3f;
             var velocity = Vector2.zero;
-            while (!Mathf.Approximately(transform.anchoredPosition.y, target))
+            while (transform.anchoredPosition != target)
             {
-                transform.anchoredPosition = Vector2.SmoothDamp(transform.anchoredPosition, targetVector, ref velocity, smoothTime);
+                transform.anchoredPosition = Vector2.SmoothDamp(transform.anchoredPosition, target, ref velocity, smoothTime);
                 yield return null;
             }
-            transform.anchoredPosition = targetVector;
+            transform.anchoredPosition = target;
         }
     }
 }
