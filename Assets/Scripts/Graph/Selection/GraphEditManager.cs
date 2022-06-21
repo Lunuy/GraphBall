@@ -75,7 +75,7 @@ namespace Assets.Scripts.Graph.Selection
         }
 
         private void _closeExprEditor() {
-            Debug.Log("CLOSE EDITOR");
+            _equationInputUi.ChangeContext(null);
         }
 
         public void OnDestroy()

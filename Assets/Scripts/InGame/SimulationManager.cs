@@ -28,6 +28,8 @@ namespace Assets.Scripts.InGame
             _simulationControlUi.OnStopButtonClicked += _onStopButtonClicked;
             _simulationControlUi.OnPauseButtonClicked += _onPauseButtonClicked;
             _simulationControlUi.OnResumeButtonClicked += _onResumeButtonClicked;
+
+            ResetSimulation();
         }
 
         private void _onPlayButtonClicked() {

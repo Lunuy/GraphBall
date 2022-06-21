@@ -10,7 +10,7 @@ namespace Assets.Scripts.InGame
         
         private List<SimulationRigidbodyClient> _clients = new List<SimulationRigidbodyClient>();
 
-        public void Start() {
+        public void Awake() {
             if(simulation == null) {
                 throw new Exception("Simulation is null");
             }
@@ -19,6 +19,15 @@ namespace Assets.Scripts.InGame
             simulation.OnSimulationPause += _onSimulationPause;
             simulation.OnSimulationResume += _onSimulationResume;
             simulation.OnSimulationReset += _onSimulationReset;
+        }
+
+        public void OnDestroy() {
+            if(simulation != null) {
+                simulation.OnSimulationStart -= _onSimulationStart;
+                simulation.OnSimulationPause -= _onSimulationPause;
+                simulation.OnSimulationResume -= _onSimulationResume;
+                simulation.OnSimulationReset -= _onSimulationReset;
+            }
         }
 
         public void AddClient(SimulationRigidbodyClient client) {
