@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Assets.Scripts.ExprEval.Epp
 {
@@ -108,12 +109,12 @@ namespace Assets.Scripts.ExprEval.Epp
             {
                 unsafe
                 {
+                    var buffer = new byte[result.Diagnostics[i].MessageLength];
+                    Marshal.Copy(result.Diagnostics[i].Message, buffer, 0, result.Diagnostics[i].MessageLength);
+
                     diagnostics[i] = new Diagnostic(
                         result.Diagnostics[i].Level,
-                        Marshal.PtrToStringUTF8(
-                            result.Diagnostics[i].Message,
-                            result.Diagnostics[i].MessageLength
-                        )
+                        Encoding.UTF8.GetString(buffer)
                     );
                 }
             }

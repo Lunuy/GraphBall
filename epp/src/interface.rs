@@ -50,6 +50,19 @@ fn ast_map() -> &'static mut HashMap<i32, Box<Expr>> {
 
 static mut NEXT_ID: i32 = 1;
 
+static mut LOW_DIAGNOSTICS: Option<Vec<LowDiagnostic>> = None;
+
+fn low_diagnostics() -> &'static mut Vec<LowDiagnostic> {
+    if let Some(diagnostics) = unsafe { LOW_DIAGNOSTICS.as_mut() } {
+        diagnostics
+    } else {
+        unsafe {
+            LOW_DIAGNOSTICS = Some(Vec::new());
+            LOW_DIAGNOSTICS.as_mut().unwrap()
+        }
+    }
+}
+
 fn register_ast(ast: Box<Expr>) -> i32 {
     let id = unsafe { NEXT_ID };
     ast_map().insert(id, ast);
@@ -121,18 +134,24 @@ pub extern fn create_ast(
         }
     }
 
-    let low_diagnostics = Diagnostic::diagnostics().to_vec().iter().map(|diagnostic| {
-        LowDiagnostic {
+    let low_diagnostics = low_diagnostics();
+    low_diagnostics.clear();
+
+    for diagnostic in Diagnostic::diagnostics().to_vec().iter() {
+        low_diagnostics.push(LowDiagnostic {
             level: diagnostic.level(),
             message: diagnostic.message().as_ptr() as *const c_char,
             message_length: diagnostic.message().len() as i32
-        }
-    }).collect::<Vec<_>>();
+        });
+    }
+
+    let low_diagnostics_ptr = low_diagnostics.as_ptr();
+    let diagnostics_len = low_diagnostics.len();
 
     ParseResult {
         ast_id: result,
-        diagnostics: low_diagnostics.as_ptr(),
-        diagnostics_count: low_diagnostics.len() as i32,
+        diagnostics: low_diagnostics_ptr,
+        diagnostics_count: diagnostics_len as i32,
     }
 }
 
@@ -154,6 +173,7 @@ pub extern fn eval_ast(
 
     let eval_result = evaluator::fold_const_expr(
         &ast,
+        &CONSTANTS,
         &variables
     );
     

@@ -34,8 +34,8 @@ pub fn eval_equation(
 ) -> Result<EvalResult, ()> {
     match ast {
         Expr::Eq(lhs, rhs) => {
-            let lhs = fold_const_expr(lhs, variables);
-            let rhs = fold_const_expr(rhs, variables);
+            let lhs = fold_const_expr(lhs, &HashMap::new(), variables);
+            let rhs = fold_const_expr(rhs, &HashMap::new(), variables);
             return Ok(
                 EvalResult {
                     rhs, op: ast.to_str(), lhs,
@@ -44,8 +44,8 @@ pub fn eval_equation(
             );
         },
         Expr::Lt(lhs, rhs) => {
-            let lhs = fold_const_expr(lhs, variables);
-            let rhs = fold_const_expr(rhs, variables);
+            let lhs = fold_const_expr(lhs, &HashMap::new(), variables);
+            let rhs = fold_const_expr(rhs, &HashMap::new(), variables);
             return Ok(
                 EvalResult {
                     rhs, op: ast.to_str(), lhs,
@@ -54,8 +54,8 @@ pub fn eval_equation(
             );
         },
         Expr::Gt(lhs, rhs) => {
-            let lhs = fold_const_expr(lhs, variables);
-            let rhs = fold_const_expr(rhs, variables);
+            let lhs = fold_const_expr(lhs, &HashMap::new(), variables);
+            let rhs = fold_const_expr(rhs, &HashMap::new(), variables);
             return Ok(
                 EvalResult {
                     rhs, op: ast.to_str(), lhs,
@@ -64,8 +64,8 @@ pub fn eval_equation(
             );
         },
         Expr::Le(lhs, rhs) => {
-            let lhs = fold_const_expr(lhs, variables);
-            let rhs = fold_const_expr(rhs, variables);
+            let lhs = fold_const_expr(lhs, &HashMap::new(), variables);
+            let rhs = fold_const_expr(rhs, &HashMap::new(), variables);
             return Ok(
                 EvalResult {
                     rhs, op: ast.to_str(), lhs,
@@ -74,8 +74,8 @@ pub fn eval_equation(
             );
         },
         Expr::Ge(lhs, rhs) => {
-            let lhs = fold_const_expr(lhs, variables);
-            let rhs = fold_const_expr(rhs, variables);
+            let lhs = fold_const_expr(lhs, &HashMap::new(), variables);
+            let rhs = fold_const_expr(rhs, &HashMap::new(), variables);
             return Ok(
                 EvalResult {
                     rhs, op: ast.to_str(), lhs,
@@ -87,21 +87,23 @@ pub fn eval_equation(
     }
 }
 
-pub fn fold_const_expr(ast: &Expr, variables: &HashMap<String, f64>) -> f64 {
+pub fn fold_const_expr(ast: &Expr, constants: &HashMap<String, f64>, variables: &HashMap<String, f64>) -> f64 {
     match ast {
         Expr::Literal(value) => value.clone(),
-        Expr::Add(lhs, rhs) => fold_const_expr(lhs, variables) + fold_const_expr(rhs, variables),
-        Expr::Sub(lhs, rhs) => fold_const_expr(lhs, variables) - fold_const_expr(rhs, variables),
-        Expr::Mul(lhs, rhs) => fold_const_expr(lhs, variables) * fold_const_expr(rhs, variables),
-        Expr::Div(lhs, rhs) => fold_const_expr(lhs, variables) / fold_const_expr(rhs, variables),
-        Expr::Mod(lhs, rhs) => fold_const_expr(lhs, variables) % fold_const_expr(rhs, variables),
-        Expr::Pow(lhs, rhs) => fold_const_expr(lhs, variables).powf(fold_const_expr(rhs, variables)),
-        Expr::Unary(expr) => -fold_const_expr(expr, variables),
+        Expr::Add(lhs, rhs) => fold_const_expr(lhs, constants, variables) + fold_const_expr(rhs, constants, variables),
+        Expr::Sub(lhs, rhs) => fold_const_expr(lhs, constants, variables) - fold_const_expr(rhs, constants, variables),
+        Expr::Mul(lhs, rhs) => fold_const_expr(lhs, constants, variables) * fold_const_expr(rhs, constants, variables),
+        Expr::Div(lhs, rhs) => fold_const_expr(lhs, constants, variables) / fold_const_expr(rhs, constants, variables),
+        Expr::Mod(lhs, rhs) => fold_const_expr(lhs, constants, variables) % fold_const_expr(rhs, constants, variables),
+        Expr::Pow(lhs, rhs) => fold_const_expr(lhs, constants, variables).powf(fold_const_expr(rhs, constants, variables)),
+        Expr::Unary(expr) => -fold_const_expr(expr, constants, variables),
         Expr::Id(id) => {
             if let Some(value) = variables.get(id) {
                 value.clone()
+            } else if let Some(value) = constants.get(id) {
+                value.clone()
             } else {
-                panic!("variable not found");
+                panic!("variable or constant {} not found", id);
             }
         },
         Expr::Eq(..)
@@ -110,7 +112,7 @@ pub fn fold_const_expr(ast: &Expr, variables: &HashMap<String, f64>) -> f64 {
         | Expr::Le(..)
         | Expr::Ge(..) => panic!("constant expression expected"),
         Expr::Call(func_name, params) => {
-            let params = params.iter().map(|param| fold_const_expr(param, variables)).collect::<Vec<f64>>();
+            let params = params.iter().map(|param| fold_const_expr(param, constants, variables)).collect::<Vec<f64>>();
             match func_name.as_str() {
                 "abs" => f64::abs(params[0]),
                 "acos" => f64::acos(params[0]),
