@@ -35,6 +35,7 @@ namespace Assets.Scripts.Graph
             }
         }
 
+        [SerializeField]
         private double _maxX = 10;
 
         public double MaxX {
@@ -60,6 +61,7 @@ namespace Assets.Scripts.Graph
             }
         }
 
+        [SerializeField]
         private double _step = 0.05;
 
         public double Step {
@@ -79,6 +81,7 @@ namespace Assets.Scripts.Graph
             }
         }
 
+        [SerializeField]
         private double _minY;
 
         public double MinY {
@@ -94,6 +97,7 @@ namespace Assets.Scripts.Graph
                 };
             }
         }
+
         public double MaxY => _minY + (MaxX - MinX) * (transform.localScale.y / transform.localScale.x);
 
         private GraphSamplerComponent? _graphSampler;
