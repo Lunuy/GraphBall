@@ -8,22 +8,40 @@ namespace Assets.Scripts.InGame
 
     public abstract class Simulation : MonoBehaviour
     {
+        public enum SimulationState {
+            Stopped,
+            Running,
+            Paused
+        }
+
         public event SimulationEvent OnSimulationStart = () => { };
+        public event SimulationEvent OnSimulationPause = () => { };
+        public event SimulationEvent OnSimulationResume = () => { };
         public event SimulationEvent OnSimulationReset = () => { };
+
         public event SimulationEvent OnSimulationFailure = () => { };
         public event SimulationEvent OnSimulationSuccess = () => { };
         public event VariableUpdate OnVariableUpdate = _ => { };
         
         public abstract (string, double)[] GetInitialVariables();
 
-        public bool IsRunning { get; private set; }
+        public SimulationState State { get; private set; } = SimulationState.Stopped;
+
         public virtual void StartSimulation() {
             OnSimulationStart.Invoke();
-            IsRunning = true;
+            State = SimulationState.Running;
         }
         public virtual void ResetSimulation() {
             OnSimulationReset.Invoke();
-            IsRunning = false;
+            State = SimulationState.Stopped;
+        }
+        public virtual void PauseSimulation() {
+            OnSimulationPause.Invoke();
+            State = SimulationState.Paused;
+        }
+        public virtual void ResumeSimulation() {
+            OnSimulationResume.Invoke();
+            State = SimulationState.Running;
         }
         public void VariableUpdate((string, double)[] variables) {
             OnVariableUpdate.Invoke(variables);

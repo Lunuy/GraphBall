@@ -29,7 +29,9 @@ namespace Assets.Scripts.Game
         }
 
         public void Update() {
-            _t += Time.deltaTime;
+            if(State == SimulationState.Running) {
+                _t += Time.deltaTime;
+            }
 
             VariableUpdate(new (string, double)[]{("t", _t)});
         }
@@ -39,7 +41,7 @@ namespace Assets.Scripts.Game
         }
 
         private void OnCollide(Collision2D collision) {
-            if(IsRunning) {
+            if(State == SimulationState.Running) {
                 if(collision.gameObject == Target) {
                     Success();
                 }
@@ -60,7 +62,13 @@ namespace Assets.Scripts.Game
         }
 
         public override void ResetSimulation() {
+            if(Ball == null) {
+                throw new Exception("Ball is null");
+            }
+
             base.ResetSimulation();
+
+            Ball.transform.position = BallInitialPosition;
         }
     }
 }

@@ -11,12 +11,15 @@ namespace Assets.Scripts.Graph.Selection
     public class GraphEditClient : MonoBehaviour
     {
         public delegate void ClickHandler(GraphEditClient graphEditClient);
+        public delegate void GraphUpdateHandler(GraphEditClient graphEditClient);
 
         public event ClickHandler OnClick = delegate {  };
+        public event GraphUpdateHandler OnGraphUpdate = delegate {  };
 
         public GraphEditManager? GraphEditManager;
         public EquationInputContext EquationInputContext = new EquationInputContext() { MaxCharacterCount = 30 };
         public List<string> allowedVariables = new List<string>() { "x" };
+        public bool HasExprError { get; private set; } = false;
 
         public GraphSamplerComponent? GraphSampler;
 
@@ -46,18 +49,20 @@ namespace Assets.Scripts.Graph.Selection
             var parseResult = ExprParser.Parse(exprInput, variables);
             ArrayPool<string>.Return(variables);
 
-
-            if(parseResult.EvaluableAst == null) {
+            {
                 var diagnosticsList = new List<string>();
                 for(var i = 0; i < parseResult.Diagnostics.Length; i++) {
                     diagnosticsList.Add(parseResult.Diagnostics[i].ErrorLevel.ToString() + ": " + parseResult.Diagnostics[i].Message);
                 }
                 
                 EquationInputContext.ErrorList = diagnosticsList;
+            }
 
+            if(parseResult.EvaluableAst == null) {
+                HasExprError = true;
                 return;
             } else {
-                EquationInputContext.ErrorList = new List<string>();
+                HasExprError = false;
             }
 
             GraphSampler.Function = (t, x) =>

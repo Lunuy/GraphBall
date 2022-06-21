@@ -21,9 +21,11 @@ namespace Assets.Scripts.Graph.Selection
         private List<GraphEditClient> _clients = new();
         private bool _isEditable = true;
         private EquationInputUi? _equationInputUi;
+        private SimulationControlUi? _simulationControlUi;
 
-        public void SetEquationInputUi(IReadOnlyDictionary<string, List<UnityEngine.Object>> dict) {
+        public void SetUi(IReadOnlyDictionary<string, List<UnityEngine.Object>> dict) {
             _equationInputUi = (EquationInputUi)dict["GameUI"][0];
+            _simulationControlUi = (Assets.Scripts.UI.SimulationControlUi)dict["GameUI"][1];
         }
 
         public void AddClient(GraphEditClient client)
@@ -31,6 +33,7 @@ namespace Assets.Scripts.Graph.Selection
             _clients.Add(client);
 
             client.OnClick += _onGraphClick;
+            client.OnGraphUpdate += _onGraphUpdate;
         }
 
         private void _onGraphClick(GraphEditClient graphEditClient)
@@ -40,9 +43,27 @@ namespace Assets.Scripts.Graph.Selection
             }
         }
 
-        private void _openExprEditor(GraphEditClient graphEditClient) {
-            Debug.Log("OPEN EDITOR");
+        private void _onGraphUpdate(GraphEditClient graphEditClient) {
+            if(_simulationControlUi == null) {
+                throw new Exception("_simulationControlUi is null");
+            }
 
+            bool isThereExprError = false;
+            for(int i = 0; i < _clients.Count; i++) {
+                if(_clients[i].HasExprError) {
+                    isThereExprError = true;
+                    break;
+                }
+            }
+
+            if(isThereExprError) {
+                _simulationControlUi.CanPlay = false;
+            } else {
+                _simulationControlUi.CanPlay = true;
+            }
+        }
+
+        private void _openExprEditor(GraphEditClient graphEditClient) {
             if(_equationInputUi == null) {
                 throw new Exception("EquationInputUi is null");
             }
