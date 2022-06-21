@@ -8,14 +8,17 @@ namespace Assets.Scripts.Graph.Selection
 {
     public class GraphEditManager : MonoBehaviour
     {
-        public bool IsEditable {
+        public bool IsEditable
+        {
             get => _isEditable;
-            set {
+            set
+            {
                 _isEditable = value;
-                if(_isEditable == false) {
+                if (_isEditable == false)
+                {
                     _closeExprEditor();
                 }
-            } 
+            }
         }
 
         private List<GraphEditClient> _clients = new();
@@ -23,9 +26,10 @@ namespace Assets.Scripts.Graph.Selection
         private EquationInputUi? _equationInputUi;
         private SimulationControlUi? _simulationControlUi;
 
-        public void SetUi(IReadOnlyDictionary<string, List<UnityEngine.Object>> dict) {
-            _equationInputUi = (EquationInputUi)dict["GameUI"][0];
-            _simulationControlUi = (Assets.Scripts.UI.SimulationControlUi)dict["GameUI"][1];
+        public void SetUi(IReadOnlyDictionary<string, List<UnityEngine.Object>> dict)
+        {
+            _equationInputUi = (EquationInputUi) dict["GameUI"][0];
+            _simulationControlUi = (SimulationControlUi) dict["GameUI"][1];
         }
 
         public void AddClient(GraphEditClient client)
@@ -38,43 +42,61 @@ namespace Assets.Scripts.Graph.Selection
 
         private void _onGraphClick(GraphEditClient graphEditClient)
         {
-            if(_isEditable) {
+            if (_isEditable)
+            {
                 _openExprEditor(graphEditClient);
             }
         }
 
-        private void _onGraphUpdate(GraphEditClient graphEditClient) {
-            if(_simulationControlUi == null) {
+        private void _onGraphUpdate(GraphEditClient graphEditClient)
+        {
+            if (_simulationControlUi == null)
+            {
                 throw new Exception("_simulationControlUi is null");
             }
 
             bool isThereExprError = false;
-            for(int i = 0; i < _clients.Count; i++) {
-                if(_clients[i].HasExprError) {
+            for (int i = 0; i < _clients.Count; i++)
+            {
+                if (_clients[i].HasExprError)
+                {
                     isThereExprError = true;
                     break;
                 }
             }
 
-            if(isThereExprError) {
+            if (isThereExprError)
+            {
                 _simulationControlUi.CanPlay = false;
-            } else {
+            }
+            else
+            {
                 _simulationControlUi.CanPlay = true;
             }
         }
 
-        private void _openExprEditor(GraphEditClient graphEditClient) {
-            if(_equationInputUi == null) {
+        private void _openExprEditor(GraphEditClient graphEditClient)
+        {
+            if (_equationInputUi == null)
+            {
                 throw new Exception("EquationInputUi is null");
             }
-            if(graphEditClient.EquationInputContext == null) {
+
+            if (graphEditClient.EquationInputContext == null)
+            {
                 throw new Exception("EquationInputContext is null");
             }
-            
+
             _equationInputUi.ChangeContext(graphEditClient.EquationInputContext);
         }
 
-        private void _closeExprEditor() {
+        private void _closeExprEditor()
+        {
+            if (_equationInputUi == null)
+            {
+                throw new Exception("EquationInputUi is null");
+            }
+
             _equationInputUi.ChangeContext(null);
         }
 
