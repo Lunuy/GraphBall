@@ -1,6 +1,5 @@
 #nullable enable
 using UnityEngine;
-using UnityEngine.Events;
 using Assets.Scripts.Graph.Selection;
 using System;
 
@@ -13,7 +12,7 @@ namespace Assets.Scripts.InGame
         public GraphEditManager? GraphEditManager;
         public Simulation? Simulation;
 
-        virtual public void StartSimulation() {
+        public virtual void StartSimulation() {
             if(GraphEditManager == null) {
                 throw new Exception("GraphEditManager is null");
             }
@@ -25,7 +24,7 @@ namespace Assets.Scripts.InGame
             Simulation.StartSimulation();
         }
 
-        virtual public void ResetSimulation() {
+        public virtual void ResetSimulation() {
             if(GraphEditManager == null) {
                 throw new Exception("GraphEditManager is null");
             }

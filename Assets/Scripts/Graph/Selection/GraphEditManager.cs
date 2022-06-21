@@ -18,7 +18,7 @@ namespace Assets.Scripts.Graph.Selection
             } 
         }
 
-        private List<GraphEditClient> _clients = new List<GraphEditClient>();
+        private List<GraphEditClient> _clients = new();
         private bool _isEditable = true;
         private EquationInputUi? _equationInputUi;
 

@@ -12,27 +12,27 @@ namespace Assets.Scripts.InGame
         public event SimulationEvent OnSimulationReset = () => { };
         public event SimulationEvent OnSimulationFailure = () => { };
         public event SimulationEvent OnSimulationSuccess = () => { };
-        public event VariableUpdate OnVariableUpdate = (variables) => { };
+        public event VariableUpdate OnVariableUpdate = _ => { };
         
-        abstract public (string, double)[] GetInitialVariables();
+        public abstract (string, double)[] GetInitialVariables();
 
         public bool IsRunning { get; private set; }
-        virtual public void StartSimulation() {
-            OnSimulationStart?.Invoke();
+        public virtual void StartSimulation() {
+            OnSimulationStart.Invoke();
             IsRunning = true;
         }
-        virtual public void ResetSimulation() {
-            OnSimulationReset?.Invoke();
+        public virtual void ResetSimulation() {
+            OnSimulationReset.Invoke();
             IsRunning = false;
         }
         public void VariableUpdate((string, double)[] variables) {
-            OnVariableUpdate?.Invoke(variables);
+            OnVariableUpdate.Invoke(variables);
         }
         public void Success() {
-            OnSimulationSuccess?.Invoke();
+            OnSimulationSuccess.Invoke();
         }
         public void Failure() {
-            OnSimulationFailure?.Invoke();
+            OnSimulationFailure.Invoke();
         }
     }
 }

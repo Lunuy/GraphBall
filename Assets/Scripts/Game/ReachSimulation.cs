@@ -17,7 +17,7 @@ namespace Assets.Scripts.Game
         
         private double _t = 0;
 
-        override public (string, double)[] GetInitialVariables() {
+        public override (string, double)[] GetInitialVariables() {
             return new (string, double)[] { ("t", _t) };
         }
 
@@ -25,7 +25,7 @@ namespace Assets.Scripts.Game
             if(CollisionEventer == null) {
                 throw new Exception("CollisionEventer is null");
             }
-            CollisionEventer.OnCollisionEnter_ += _onCollide;
+            CollisionEventer.OnCollisionEnter += OnCollide;
         }
 
         public void Update() {
@@ -35,14 +35,10 @@ namespace Assets.Scripts.Game
         }
 
         public void OnDestroy() {
-            if(CollisionEventer == null) {
-                throw new Exception("CollisionEventer is null");
-            }
-
-            CollisionEventer.OnCollisionEnter_ -= _onCollide;
+            if (CollisionEventer != null) CollisionEventer.OnCollisionEnter -= OnCollide;
         }
 
-        private void _onCollide(Collision2D collision) {
+        private void OnCollide(Collision2D collision) {
             if(IsRunning) {
                 if(collision.gameObject == Target) {
                     Success();
@@ -53,7 +49,7 @@ namespace Assets.Scripts.Game
             }
         }
 
-        override public void StartSimulation() {
+        public override void StartSimulation() {
             if(Ball == null) {
                 throw new Exception("Ball is null");
             }
@@ -63,7 +59,7 @@ namespace Assets.Scripts.Game
             _t = 0;
         }
 
-        override public void ResetSimulation() {
+        public override void ResetSimulation() {
             base.ResetSimulation();
         }
     }

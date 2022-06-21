@@ -59,7 +59,7 @@ namespace Assets.Scripts.Graph
 
             for (var i = 0; i < _yArray.Count; i++)
             {
-                points[i] = (_options.Offset + new Vector2((float) (i), (float) (_yArray[i]))) * _options.Unit;
+                points[i] = (_options.Offset + new Vector2(i, (float) _yArray[i])) * _options.Unit;
             }
 
             _lineRenderer.positionCount = points.Length;

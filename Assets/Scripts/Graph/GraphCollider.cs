@@ -56,7 +56,7 @@ namespace Assets.Scripts.Graph
             // ReSharper disable once LoopCanBeConvertedToQuery
             for (var i = 0; i < _yArray.Count; i++)
             {
-                _points.Add((_options.Offset + new Vector2((float) (i), (float) (_yArray[i]))) * _options.Unit);
+                _points.Add((_options.Offset + new Vector2(i, (float) _yArray[i])) * _options.Unit);
             }
 
             _edgeCollider2D.SetPoints(_points);

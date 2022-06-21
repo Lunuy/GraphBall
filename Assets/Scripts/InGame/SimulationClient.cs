@@ -1,11 +1,7 @@
 #nullable enable
 using UnityEngine;
-using UnityEngine.Events;
-using Assets.Scripts.Graph.Selection;
 using System;
-using Assets.Scripts.ExprEval;
 using Assets.Scripts.Graph;
-using Assets.Scripts.Utility;
 
 namespace Assets.Scripts.InGame
 {
@@ -24,7 +20,7 @@ namespace Assets.Scripts.InGame
                 throw new Exception("GraphSampler is null");
             }
 
-            Simulation.OnVariableUpdate += _onVariableUpdate;
+            Simulation.OnVariableUpdate += OnVariableUpdate;
             GraphSampler.Variables = Simulation.GetInitialVariables();
         }
 
@@ -33,10 +29,10 @@ namespace Assets.Scripts.InGame
                 throw new Exception("Simulation is null");
             }
 
-            Simulation.OnVariableUpdate -= _onVariableUpdate;
+            Simulation.OnVariableUpdate -= OnVariableUpdate;
         }
 
-        private void _onVariableUpdate((string, double)[] variables) {
+        private void OnVariableUpdate((string, double)[] variables) {
             if(GraphSampler == null) {
                 throw new Exception("GraphSampler is null");
             }

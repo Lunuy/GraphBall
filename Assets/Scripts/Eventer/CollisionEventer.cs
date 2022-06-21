@@ -7,10 +7,10 @@ namespace Assets.Scripts.Eventer
 
     public class CollisionEventer : MonoBehaviour
     {
-        public Collision OnCollisionEnter_ = delegate {  };
+        public event Collision OnCollisionEnter = delegate {  };
 
         public void OnCollisionEnter2D(Collision2D collision) {
-            OnCollisionEnter_(collision);
+            OnCollisionEnter(collision);
         }
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 namespace Assets.Scripts.Graph
 {
     [ExecuteInEditMode]
+    // ReSharper disable once UnusedMember.Global
     public class AxisSignRenderer : MonoBehaviour
     {
         public GameObject? XAxisSign;
