@@ -48,7 +48,7 @@ namespace Assets.Scripts.InGame
 
                 // get offset value
                 var deltaDistance = oldTouchDistance - currentTouchDistance;
-                var scrollAcc = _camera.orthographicSize + deltaDistance;
+                var scrollAcc = _camera.orthographicSize + deltaDistance * 0.01f;
                 scrollAcc = Mathf.Clamp(scrollAcc, MinOrthographicSize, MaxOrthographicSize);
 
                 _camera.orthographicSize = scrollAcc;
