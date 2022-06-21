@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Assets.Scripts.InGame
 {
@@ -28,12 +29,12 @@ namespace Assets.Scripts.InGame
         // ReSharper disable once UnusedMember.Local
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 _lastDragPosition = _camera.ScreenToViewportPoint(Input.mousePosition);
             }
 
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 var newDragPosition = _camera.ScreenToViewportPoint(Input.mousePosition);
                 var delta = _lastDragPosition - newDragPosition;
