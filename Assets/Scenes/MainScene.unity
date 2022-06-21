@@ -643,7 +643,7 @@ MonoBehaviour:
   CameraMinPositionY: -5
   MaxOrthographicSize: 5
   MinOrthographicSize: 3
---- !u!21 &1154211064
+--- !u!21 &1244326949
 Material:
   serializedVersion: 8
   m_ObjectHideFlags: 0
@@ -686,7 +686,7 @@ Material:
     - _SubTiling: 4
     - _TileScale: 0.95
     m_Colors:
-    - _Offset: {r: 0, g: -0, b: 0, a: 0}
+    - _Offset: {r: -0, g: -0, b: 0, a: 0}
     - _TileColor: {r: 1, g: 1, b: 1, a: 0}
     - _Tiling: {r: 10, g: 5, b: 0, a: 0}
   m_BuildTextureStacks: []
@@ -843,7 +843,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1154211064}
+  - {fileID: 1244326949}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1358,8 +1358,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 1, z: 0}
+  - {x: -0, y: 0, z: 0}
+  - {x: -0, y: 1, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1

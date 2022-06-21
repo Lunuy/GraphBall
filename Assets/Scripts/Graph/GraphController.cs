@@ -130,7 +130,7 @@ namespace Assets.Scripts.Graph
 
             var unit = new Vector2(1.0f / (float)(_maxX - _minX), 1.0f / (float)(MaxY - _minY));
             _axisRenderer!.Options = new AxisRendererOptions {
-                Origin = new Vector2((float)_minX, (float)-_minY),
+                Origin = new Vector2((float)-_minX, (float)-_minY),
                 Size = new Vector2((float)(_maxX - _minX), (float)(MaxY - _minY)),
                 Unit = unit
             };
