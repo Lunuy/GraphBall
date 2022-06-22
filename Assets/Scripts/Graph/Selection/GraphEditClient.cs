@@ -54,11 +54,27 @@ namespace Assets.Scripts.Graph.Selection
             {
                 var diagnosticsList = new List<string>();
                 for(var i = 0; i < parseResult.Diagnostics.Length; i++) {
-                    diagnosticsList.Add(parseResult.Diagnostics[i].ErrorLevel.ToString() + ": " + parseResult.Diagnostics[i].Message);
+                    var errorLevel = parseResult.Diagnostics[i].ErrorLevel;
+                    var message = parseResult.Diagnostics[i].Message;
+
+                    if(errorLevel == ExprEval.Epp.ErrorLevel.Error) {
+                        diagnosticsList.Add(
+                            "<color=red>Error: " + message + "</color>"
+                        );
+                    } else if(errorLevel == ExprEval.Epp.ErrorLevel.Warning) {
+                        diagnosticsList.Add(
+                            "<color=#DDDD00>Warning: " + message + "</color>"
+                        );
+                    } else if(errorLevel == ExprEval.Epp.ErrorLevel.Note) {
+                        diagnosticsList.Add(
+                            "<color=gray>Note: " + message + "</color>"
+                        );
+                    }
                 }
                 
                 EquationInputContext.ErrorList = diagnosticsList;
             }
+
 
             if(parseResult.EvaluableAst == null) {
                 HasExprError = true;
