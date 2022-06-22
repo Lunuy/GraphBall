@@ -16,7 +16,7 @@ namespace Assets.Scripts.InGame
         {
             var points = new Vector3[sides];
             var angle = Mathf.Deg2Rad * 360 / sides;
-            for (var i = 0; i < sides; i++)
+            for (var i = 0; i < sides; ++i)
             {
                 points[i] = new Vector2(
                     radius * Mathf.Cos(angle * i + Mathf.PI / 2),

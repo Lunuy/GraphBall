@@ -82,14 +82,14 @@ namespace Assets.Scripts.Loader
         private static IEnumerator LoadSingleScene(GlobalSceneLoader globalSceneLoader, string sceneName)
         {
             globalSceneLoader._loaderUi.Subtitle = $"Loading {sceneName}";
-            yield return new WaitForSecondsRealtime(0.5f);
+            yield return new WaitForSecondsRealtime(0.3f);
             yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
         }
 
         private static IEnumerator UnloadSingleScene(GlobalSceneLoader globalSceneLoader, string sceneName)
         {
             globalSceneLoader._loaderUi.Subtitle = $"Unloading {sceneName}";
-            yield return new WaitForSecondsRealtime(0.5f);
+            yield return new WaitForSecondsRealtime(0.3f);
             yield return SceneManager.UnloadSceneAsync(sceneName);
         }
 

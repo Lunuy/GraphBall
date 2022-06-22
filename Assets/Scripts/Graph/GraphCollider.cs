@@ -54,7 +54,7 @@ namespace Assets.Scripts.Graph
             _points.Clear();
 
             // ReSharper disable once LoopCanBeConvertedToQuery
-            for (var i = 0; i < _yArray.Count; i++)
+            for (var i = 0; i < _yArray.Count; ++i)
             {
                 _points.Add((_options.Offset + new Vector2(i, (float) _yArray[i])) * _options.Unit);
             }

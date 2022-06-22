@@ -11,40 +11,49 @@ namespace Assets.Scripts.Graph.Selection
     public class GraphEditClient : MonoBehaviour
     {
         public delegate void ClickHandler(GraphEditClient graphEditClient);
+
         public delegate void GraphUpdateHandler(GraphEditClient graphEditClient);
 
-        public event ClickHandler OnClick = delegate {  };
-        public event GraphUpdateHandler OnGraphUpdate = delegate {  };
+        public event ClickHandler OnClick = delegate { };
+        public event GraphUpdateHandler OnGraphUpdate = delegate { };
 
         public GraphEditManager? GraphEditManager;
-        public EquationInputContext EquationInputContext = new EquationInputContext() { MaxCharacterCount = 30 };
-        public List<string> allowedVariables = new List<string>() { "x" };
-        public bool HasExprError { get; private set; } = false;
+        public EquationInputContext EquationInputContext = new() {MaxCharacterCount = 30};
+        public List<string> allowedVariables = new() {"x"};
+        public bool HasExprError { get; private set; }
 
         public GraphSamplerComponent? GraphSampler;
 
-        public void Start() {
-            if(GraphEditManager == null) {
+        // ReSharper disable once UnusedMember.Local
+        private void Start()
+        {
+            if (GraphEditManager == null)
+            {
                 throw new Exception("GraphEditManager is null");
             }
-            if(EquationInputContext == null) {
+
+            if (EquationInputContext == null)
+            {
                 throw new Exception("EquationInputContext is null");
             }
 
             GraphEditManager.AddClient(this);
-            EquationInputContext.OnInputChanged = _onInputChanged;
+            EquationInputContext.OnInputChanged = OnInputChanged;
 
-            _onInputChanged("0");
+            OnInputChanged("0");
         }
 
-        private void _onInputChanged(String exprInput) {
-            if(GraphSampler == null) {
+        private void OnInputChanged(string exprInput)
+        {
+            if (GraphSampler == null)
+            {
                 throw new Exception("GraphSampler is null");
             }
 
             var variables = ArrayPool<string>.Rent(allowedVariables.Count);
 
-            for(var i = 0; i < allowedVariables.Count; i++) {
+            for (var i = 0; i < allowedVariables.Count; ++i)
+            {
                 variables[i] = allowedVariables[i];
             }
 
@@ -53,51 +62,64 @@ namespace Assets.Scripts.Graph.Selection
 
             {
                 var diagnosticsList = new List<string>();
-                for(var i = 0; i < parseResult.Diagnostics.Length; i++) {
+                for (var i = 0; i < parseResult.Diagnostics.Length; ++i)
+                {
                     var errorLevel = parseResult.Diagnostics[i].ErrorLevel;
                     var message = parseResult.Diagnostics[i].Message;
 
-                    if(errorLevel == ExprEval.Epp.ErrorLevel.Error) {
+                    if (errorLevel == ExprEval.Epp.ErrorLevel.Error)
+                    {
                         diagnosticsList.Add(
                             "<color=red>Error: " + message + "</color>"
                         );
-                    } else if(errorLevel == ExprEval.Epp.ErrorLevel.Warning) {
+                    }
+                    else if (errorLevel == ExprEval.Epp.ErrorLevel.Warning)
+                    {
                         diagnosticsList.Add(
+                            // ReSharper disable once StringLiteralTypo
                             "<color=#DDDD00>Warning: " + message + "</color>"
                         );
-                    } else if(errorLevel == ExprEval.Epp.ErrorLevel.Note) {
+                    }
+                    else if (errorLevel == ExprEval.Epp.ErrorLevel.Note)
+                    {
                         diagnosticsList.Add(
                             "<color=gray>Note: " + message + "</color>"
                         );
                     }
                 }
-                
+
                 EquationInputContext.ErrorList = diagnosticsList;
             }
 
 
-            if(parseResult.EvaluableAst == null) {
+            if (parseResult.EvaluableAst == null)
+            {
                 HasExprError = true;
                 return;
-            } else {
+            }
+            else
+            {
                 HasExprError = false;
             }
 
             GraphSampler.Function = (t, x) =>
             {
-                var variables = ArrayPool<(string, double)>.Rent(t.Length + 1);
-                variables[0] = ("x", x);
-                for(var i = 0; i < t.Length; i++) {
-                    variables[i + 1] = (t[i].Item1, t[i].Item2);
+                var variablesArray = ArrayPool<(string, double)>.Rent(t.Length + 1);
+                variablesArray[0] = ("x", x);
+                for (var i = 0; i < t.Length; ++i)
+                {
+                    variablesArray[i + 1] = (t[i].Item1, t[i].Item2);
                 }
 
-                var result = parseResult.EvaluableAst.Eval(variables);
-                ArrayPool<(string, double)>.Return(variables);
+                var result = parseResult.EvaluableAst.Eval(variablesArray);
+                ArrayPool<(string, double)>.Return(variablesArray);
                 return result;
             };
         }
 
-        public void OnMouseDown() {
+        // ReSharper disable once UnusedMember.Local
+        private void OnMouseDown()
+        {
             OnClick(this);
         }
     }

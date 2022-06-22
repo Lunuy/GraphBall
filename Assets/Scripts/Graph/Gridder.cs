@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace Assets.Scripts.Graph
 {
-    public struct GridderOptions {
+    public struct GridderOptions
+    {
         public double MinX;
         public double MaxX;
         public double MinY;
@@ -13,16 +14,20 @@ namespace Assets.Scripts.Graph
     [RequireComponent(typeof(SpriteRenderer))]
     public class Gridder : MonoBehaviour
     {
-        public GridderOptions Options {
+        public GridderOptions Options
+        {
             get => _options;
-            set {
+            set
+            {
                 _options = value;
                 UpdateGrid();
             }
         }
 
         private SpriteRenderer? _spriteRenderer;
-        private GridderOptions _options = new() {
+
+        private GridderOptions _options = new()
+        {
             MinX = 0,
             MaxX = 10,
             MinY = 0
@@ -30,19 +35,21 @@ namespace Assets.Scripts.Graph
 
         private static readonly int TilingNameId = Shader.PropertyToID("_Tiling");
         private static readonly int OffsetNameId = Shader.PropertyToID("_Offset");
-        
-        private void UpdateGrid() {
-            if(_spriteRenderer == null) return;
 
-            var maxY = _options.MinY + (_options.MaxX - _options.MinX) * (transform.localScale.y / transform.localScale.x);
-            
-            var tiling = new Vector2((float)(_options.MaxX - _options.MinX), (float)(maxY - _options.MinY));
-            var offset = new Vector2((float)-_options.MinX, (float)-_options.MinY);
+        private void UpdateGrid()
+        {
+            if (_spriteRenderer == null) return;
+
+            var maxY = _options.MinY +
+                       (_options.MaxX - _options.MinX) * (transform.localScale.y / transform.localScale.x);
+
+            var tiling = new Vector2((float) (_options.MaxX - _options.MinX), (float) (maxY - _options.MinY));
+            var offset = new Vector2((float) -_options.MinX, (float) -_options.MinY);
 
             _spriteRenderer.sharedMaterial.SetVector(TilingNameId, tiling);
             _spriteRenderer.sharedMaterial.SetVector(OffsetNameId, offset);
         }
-        
+
         // ReSharper disable once UnusedMember.Local
         private void Start()
         {
@@ -50,7 +57,7 @@ namespace Assets.Scripts.Graph
             _spriteRenderer!.sharedMaterial = new Material(_spriteRenderer.sharedMaterial);
             UpdateGrid();
         }
-        
+
         // ReSharper disable once UnusedMember.Local
         private void Update()
         {

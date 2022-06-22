@@ -7,10 +7,12 @@ namespace Assets.Scripts.Eventer
 
     public class TriggerEventer : MonoBehaviour
     {
-        public Collider OnColliderEnter_ = delegate {  };
+        public Collider OnColliderEnter = delegate { };
 
-        public void OnTriggerEnter2D(Collider2D collider) {
-            OnColliderEnter_(collider);
+        // ReSharper disable once UnusedMember.Local
+        private void OnTriggerEnter2D(Collider2D col)
+        {
+            OnColliderEnter(col);
         }
     }
 }

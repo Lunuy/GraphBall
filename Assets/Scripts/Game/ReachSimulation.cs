@@ -14,42 +14,55 @@ namespace Assets.Scripts.Game
         public GameObject? Target;
 
         public Vector3 BallInitialPosition;
-        
-        private double _t = 0;
 
-        public override (string, double)[] GetInitialVariables() {
-            return new (string, double)[] { ("t", _t) };
+        private double _t;
+
+        public override (string, double)[] GetInitialVariables()
+        {
+            return new (string, double)[] {("t", _t)};
         }
 
-        public void Start() {
-            if(CollisionEventer == null) {
+        // ReSharper disable once UnusedMember.Local
+        private void Start()
+        {
+            if (CollisionEventer == null)
+            {
                 throw new Exception("CollisionEventer is null");
             }
+
             CollisionEventer.OnCollisionEnter += OnCollide;
         }
 
-        public void Update() {
-            if(State == SimulationState.Running) {
+        // ReSharper disable once UnusedMember.Local
+        private void Update()
+        {
+            if (State == SimulationState.Running)
+            {
                 _t += Time.deltaTime;
             }
 
-            VariableUpdate(new (string, double)[]{("t", _t)});
+            VariableUpdate(new (string, double)[] {("t", _t)});
         }
 
-        public void OnDestroy() {
+        // ReSharper disable once UnusedMember.Local
+        private void OnDestroy()
+        {
             if (CollisionEventer != null) CollisionEventer.OnCollisionEnter -= OnCollide;
         }
 
-        private void OnCollide(Collision2D collision) {
-            if(State == SimulationState.Running) {
-                if(collision.gameObject == Target) {
-                    Success();
-                }
+        private void OnCollide(Collision2D collision)
+        {
+            if (State != SimulationState.Running) return;
+            if (collision.gameObject == Target)
+            {
+                Success();
             }
         }
 
-        public override void StartSimulation() {
-            if(Ball == null) {
+        public override void StartSimulation()
+        {
+            if (Ball == null)
+            {
                 throw new Exception("Ball is null");
             }
 
@@ -58,8 +71,10 @@ namespace Assets.Scripts.Game
             _t = 0;
         }
 
-        public override void ResetSimulation() {
-            if(Ball == null) {
+        public override void ResetSimulation()
+        {
+            if (Ball == null)
+            {
                 throw new Exception("Ball is null");
             }
 
@@ -67,7 +82,7 @@ namespace Assets.Scripts.Game
 
             Ball.transform.position = BallInitialPosition;
             _t = 0;
-            VariableUpdate(new (string, double)[]{("t", _t)});
+            VariableUpdate(new (string, double)[] {("t", _t)});
         }
     }
 }

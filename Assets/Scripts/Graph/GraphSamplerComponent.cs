@@ -48,6 +48,7 @@ namespace Assets.Scripts.Graph
                 {
                     _variables = new (string, double)[value.Length];
                 }
+
                 Array.Copy(value, _variables, value.Length);
                 Sample();
             }
@@ -67,10 +68,9 @@ namespace Assets.Scripts.Graph
                 Sample();
             }
         }
-
-        private Func<double[], double, double> _function = (t, x) => x * x * 0.1;
+        
         private readonly List<double> _sampledYList = new();
-        private GraphSampler<(string, double)[]> _graphSampler = new(0, 0, 1, (t, x) => x);
+        private GraphSampler<(string, double)[]> _graphSampler = new(0, 0, 1, (_, x) => x);
         private (string, double)[] _variables = { };
 
         private void Sample()

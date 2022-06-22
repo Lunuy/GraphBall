@@ -15,44 +15,67 @@ namespace Assets.Scripts.InGame
         public Simulation? Simulation;
         private SimulationControlUi? _simulationControlUi;
 
-        public void SetUi(IReadOnlyDictionary<string, List<UnityEngine.Object>> dict) {
-            _simulationControlUi = (Assets.Scripts.UI.SimulationControlUi)dict["GameUI"][1];
+        // ReSharper disable once UnusedMember.Global
+        public void SetUi(IReadOnlyDictionary<string, List<UnityEngine.Object>> dict)
+        {
+            _simulationControlUi = (SimulationControlUi) dict["GameUI"][1];
         }
 
-        public void Start() {
-            if(_simulationControlUi == null) {
+        // ReSharper disable once UnusedMember.Local
+        private void Start()
+        {
+            if (_simulationControlUi == null)
+            {
                 throw new Exception("GraphEditManager is null");
             }
 
-            _simulationControlUi.OnPlayButtonClicked += _onPlayButtonClicked;
-            _simulationControlUi.OnStopButtonClicked += _onStopButtonClicked;
-            _simulationControlUi.OnPauseButtonClicked += _onPauseButtonClicked;
-            _simulationControlUi.OnResumeButtonClicked += _onResumeButtonClicked;
+            _simulationControlUi.OnPlayButtonClicked += OnPlayButtonClicked;
+            _simulationControlUi.OnStopButtonClicked += OnStopButtonClicked;
+            _simulationControlUi.OnPauseButtonClicked += OnPauseButtonClicked;
+            _simulationControlUi.OnResumeButtonClicked += OnResumeButtonClicked;
 
             ResetSimulation();
         }
 
-        private void _onPlayButtonClicked() {
+        // ReSharper disable once UnusedMember.Local
+        private void OnDestroy()
+        {
+            if (_simulationControlUi == null) return;
+            _simulationControlUi.OnPlayButtonClicked -= OnPlayButtonClicked;
+            _simulationControlUi.OnStopButtonClicked -= OnStopButtonClicked;
+            _simulationControlUi.OnPauseButtonClicked -= OnPauseButtonClicked;
+            _simulationControlUi.OnResumeButtonClicked -= OnResumeButtonClicked;
+        }
+
+        private void OnPlayButtonClicked()
+        {
             StartSimulation();
         }
 
-        private void _onStopButtonClicked() {
+        private void OnStopButtonClicked()
+        {
             ResetSimulation();
         }
 
-        private void _onPauseButtonClicked() {
+        private void OnPauseButtonClicked()
+        {
             PauseSimulation();
         }
 
-        private void _onResumeButtonClicked() {
+        private void OnResumeButtonClicked()
+        {
             ResumeSimulation();
         }
 
-        public void StartSimulation() {
-            if(GraphEditManager == null) {
+        public void StartSimulation()
+        {
+            if (GraphEditManager == null)
+            {
                 throw new Exception("GraphEditManager is null");
             }
-            if(Simulation == null) {
+
+            if (Simulation == null)
+            {
                 throw new Exception("Simulation is null");
             }
 
@@ -60,28 +83,36 @@ namespace Assets.Scripts.InGame
             Simulation.StartSimulation();
         }
 
-        public void ResetSimulation() {
-            if(GraphEditManager == null) {
+        public void ResetSimulation()
+        {
+            if (GraphEditManager == null)
+            {
                 throw new Exception("GraphEditManager is null");
             }
-            if(Simulation == null) {
+
+            if (Simulation == null)
+            {
                 throw new Exception("Simulation is null");
             }
-            
+
             GraphEditManager.IsEditable = true;
             Simulation.ResetSimulation();
         }
 
-        public void PauseSimulation() {
-            if(Simulation == null) {
+        public void PauseSimulation()
+        {
+            if (Simulation == null)
+            {
                 throw new Exception("Simulation is null");
             }
 
             Simulation.PauseSimulation();
         }
 
-        public void ResumeSimulation() {
-            if(Simulation == null) {
+        public void ResumeSimulation()
+        {
+            if (Simulation == null)
+            {
                 throw new Exception("Simulation is null");
             }
 

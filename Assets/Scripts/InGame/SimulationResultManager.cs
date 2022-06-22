@@ -1,14 +1,11 @@
 #nullable enable
 using UnityEngine;
-using Assets.Scripts.Graph.Selection;
 using System;
-using Assets.Scripts.UI;
 using System.Collections.Generic;
 using System.Collections;
 
 namespace Assets.Scripts.InGame
 {
-
     public class SimulationResultManager : MonoBehaviour
     {
         public Simulation? Simulation;
@@ -20,27 +17,27 @@ namespace Assets.Scripts.InGame
             _failedText = (GameObject)dict["GameUI"][3];
         }
 
-        public void Awake()
+        // ReSharper disable once UnusedMember.Local
+        private void Awake()
         {
             if (Simulation == null)
             {
                 throw new Exception("Simulation is null");
             }
 
-            Simulation.OnSimulationSuccess += _onSimulationSuccess;
-            Simulation.OnSimulationFailure += _onSimulationFailure;
+            Simulation.OnSimulationSuccess += OnSimulationSuccess;
+            Simulation.OnSimulationFailure += OnSimulationFailure;
         }
 
-        public void OnDestroy()
+        // ReSharper disable once UnusedMember.Local
+        private void OnDestroy()
         {
-            if (Simulation != null)
-            {
-                Simulation.OnSimulationSuccess -= _onSimulationSuccess;
-                Simulation.OnSimulationFailure -= _onSimulationFailure;
-            }
+            if (Simulation == null) return;
+            Simulation.OnSimulationSuccess -= OnSimulationSuccess;
+            Simulation.OnSimulationFailure -= OnSimulationFailure;
         }
 
-        private void _onSimulationSuccess()
+        private void OnSimulationSuccess()
         {
             if(_clearText == null)
             {
@@ -56,7 +53,7 @@ namespace Assets.Scripts.InGame
             StartCoroutine(WaitAndActive());
         }
 
-        private void _onSimulationFailure()
+        private void OnSimulationFailure()
         {
             if (_failedText == null)
             {

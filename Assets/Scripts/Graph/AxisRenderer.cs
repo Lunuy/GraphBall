@@ -2,7 +2,6 @@
 using UnityEngine;
 using Unity.Collections;
 
-
 namespace Assets.Scripts.Graph
 {
     public struct AxisRendererOptions
@@ -15,9 +14,11 @@ namespace Assets.Scripts.Graph
     [ExecuteInEditMode]
     public class AxisRenderer : MonoBehaviour
     {
-        public AxisRendererOptions Options {
+        public AxisRendererOptions Options
+        {
             get => _options;
-            set {
+            set
+            {
                 _options = value;
                 RenderAxis();
             }
@@ -28,7 +29,7 @@ namespace Assets.Scripts.Graph
         public GameObject YAxisGameObject = null!;
         private LineRenderer? _xAxisLineRenderer;
         private LineRenderer? _yAxisLineRenderer;
-        
+
         // ReSharper disable once UnusedMember.Local
         private void Start()
         {
@@ -60,9 +61,10 @@ namespace Assets.Scripts.Graph
         //    _yAxisGameObject.transform.localScale = this.transform.localScale;
         //}
 
-        private void RenderAxis() {
-            if(_xAxisLineRenderer == null) return;
-            if(_yAxisLineRenderer == null) return;
+        private void RenderAxis()
+        {
+            if (_xAxisLineRenderer == null) return;
+            if (_yAxisLineRenderer == null) return;
 
             // Set style
             _xAxisLineRenderer.startWidth = _xAxisLineRenderer.endWidth = 0.1f;
@@ -80,7 +82,8 @@ namespace Assets.Scripts.Graph
             xAxisPoints[1] = new Vector2(_options.Size.x, _options.Origin.y) * _options.Unit;
 
             _xAxisLineRenderer.SetPositions(xAxisPoints);
-            _xAxisLineRenderer.positionCount = _options.Origin.y > _options.Size.y || _options.Origin.y < 0 ? 0 : xAxisPoints.Length;
+            _xAxisLineRenderer.positionCount =
+                _options.Origin.y > _options.Size.y || _options.Origin.y < 0 ? 0 : xAxisPoints.Length;
 
 
             // Y Axis Line
@@ -94,7 +97,8 @@ namespace Assets.Scripts.Graph
             yAxisPoints[1] = new Vector2(_options.Origin.x, _options.Size.y) * _options.Unit;
 
             _yAxisLineRenderer.SetPositions(yAxisPoints);
-            _yAxisLineRenderer.positionCount = _options.Origin.x > _options.Size.x || _options.Origin.x < 0 ? 0 : xAxisPoints.Length;
+            _yAxisLineRenderer.positionCount =
+                _options.Origin.x > _options.Size.x || _options.Origin.x < 0 ? 0 : xAxisPoints.Length;
         }
     }
 }

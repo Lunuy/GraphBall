@@ -53,7 +53,7 @@ namespace Assets.Scripts.Loader
         private void SetGameObjectsActive(IReadOnlyList<GameObject> objects, bool value)
         {
             // ReSharper disable once ForCanBeConvertedToForeach
-            for (var i = 0; i < objects.Count; i++)
+            for (var i = 0; i < objects.Count; ++i)
             {
                 var item = objects[i];
                 if (item == gameObject) continue;

@@ -16,16 +16,17 @@ namespace Assets.Scripts.Graph.Selection
                 _isEditable = value;
                 if (_isEditable == false)
                 {
-                    _closeExprEditor();
+                    CloseExprEditor();
                 }
             }
         }
 
-        private List<GraphEditClient> _clients = new();
+        private readonly List<GraphEditClient> _clients = new();
         private bool _isEditable = true;
         private EquationInputUi? _equationInputUi;
         private SimulationControlUi? _simulationControlUi;
 
+        // ReSharper disable once UnusedMember.Global
         public void SetUi(IReadOnlyDictionary<string, List<UnityEngine.Object>> dict)
         {
             _equationInputUi = (EquationInputUi) dict["GameUI"][0];
@@ -37,45 +38,38 @@ namespace Assets.Scripts.Graph.Selection
             _clients.Add(client);
 
             client.OnClick += _onGraphClick;
-            client.OnGraphUpdate += _onGraphUpdate;
+            client.OnGraphUpdate += OnGraphUpdate;
         }
 
         private void _onGraphClick(GraphEditClient graphEditClient)
         {
             if (_isEditable)
             {
-                _openExprEditor(graphEditClient);
+                OpenExprEditor(graphEditClient);
             }
         }
 
-        private void _onGraphUpdate(GraphEditClient graphEditClient)
+        private void OnGraphUpdate(GraphEditClient graphEditClient)
         {
             if (_simulationControlUi == null)
             {
                 throw new Exception("_simulationControlUi is null");
             }
 
-            bool isThereExprError = false;
-            for (int i = 0; i < _clients.Count; i++)
+            var isThereExprError = false;
+            // ReSharper disable once ForCanBeConvertedToForeach
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            for (var i = 0; i < _clients.Count; ++i)
             {
-                if (_clients[i].HasExprError)
-                {
-                    isThereExprError = true;
-                    break;
-                }
+                if (!_clients[i].HasExprError) continue;
+                isThereExprError = true;
+                break;
             }
 
-            if (isThereExprError)
-            {
-                _simulationControlUi.CanPlay = false;
-            }
-            else
-            {
-                _simulationControlUi.CanPlay = true;
-            }
+            _simulationControlUi.CanPlay = !isThereExprError;
         }
 
-        private void _openExprEditor(GraphEditClient graphEditClient)
+        private void OpenExprEditor(GraphEditClient graphEditClient)
         {
             if (_equationInputUi == null)
             {
@@ -90,7 +84,7 @@ namespace Assets.Scripts.Graph.Selection
             _equationInputUi.ChangeContext(graphEditClient.EquationInputContext);
         }
 
-        private void _closeExprEditor()
+        private void CloseExprEditor()
         {
             if (_equationInputUi == null)
             {
@@ -100,7 +94,8 @@ namespace Assets.Scripts.Graph.Selection
             _equationInputUi.ChangeContext(null);
         }
 
-        public void OnDestroy()
+        // ReSharper disable once UnusedMember.Local
+        private void OnDestroy()
         {
             foreach (var client in _clients)
             {

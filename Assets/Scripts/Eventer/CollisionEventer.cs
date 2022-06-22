@@ -7,9 +7,11 @@ namespace Assets.Scripts.Eventer
 
     public class CollisionEventer : MonoBehaviour
     {
-        public event Collision OnCollisionEnter = delegate {  };
+        public event Collision OnCollisionEnter = delegate { };
 
-        public void OnCollisionEnter2D(Collision2D collision) {
+        // ReSharper disable once UnusedMember.Local
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
             OnCollisionEnter(collision);
         }
     }

@@ -57,14 +57,14 @@ namespace Assets.Scripts.Graph
                 NativeArrayOptions.UninitializedMemory
             );
 
-            for (var i = 0; i < _yArray.Count; i++)
+            for (var i = 0; i < _yArray.Count; ++i)
             {
                 points[i] = (_options.Offset + new Vector2(i, (float) _yArray[i])) * _options.Unit;
             }
 
             _lineRenderer.positionCount = points.Length;
             _lineRenderer.SetPositions(points);
-            
+
             points.Dispose();
         }
     }

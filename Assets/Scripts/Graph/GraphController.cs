@@ -6,7 +6,8 @@ using System;
 namespace Assets.Scripts.Graph
 {
     [ExecuteInEditMode]
-    [RequireComponent(typeof(GraphSamplerComponent), typeof(GraphRenderer), typeof(GraphCollider)), RequireComponent(typeof(Gridder), typeof(AxisRenderer))]
+    [RequireComponent(typeof(GraphSamplerComponent), typeof(GraphRenderer), typeof(GraphCollider)),
+     RequireComponent(typeof(Gridder), typeof(AxisRenderer))]
     public class GraphController : MonoBehaviour
     {
         private double _minX;
@@ -21,13 +22,15 @@ namespace Assets.Scripts.Graph
                 if (_graphSampler == null) return;
                 if (_gridder == null) return;
                 if (_axisRenderer == null) return;
-                
-                _graphSampler.Options = new GraphSamplerComponentOptions { 
+
+                _graphSampler.Options = new GraphSamplerComponentOptions
+                {
                     MinX = value,
                     MaxX = _graphSampler.Options.MaxX,
                     Step = _graphSampler.Options.Step
                 };
-                _gridder.Options = new GridderOptions {
+                _gridder.Options = new GridderOptions
+                {
                     MinX = value,
                     MaxX = _gridder.Options.MaxX,
                     MinY = _gridder.Options.MinY
@@ -35,10 +38,10 @@ namespace Assets.Scripts.Graph
             }
         }
 
-        [SerializeField]
-        private double _maxX = 10;
+        [SerializeField] private double _maxX = 10;
 
-        public double MaxX {
+        public double MaxX
+        {
             get => _graphSampler == null ? _maxX : _graphSampler.Options.MaxX;
             set
             {
@@ -47,13 +50,15 @@ namespace Assets.Scripts.Graph
                 if (_graphSampler == null) return;
                 if (_gridder == null) return;
                 if (_axisRenderer == null) return;
-                
-                _graphSampler.Options = new GraphSamplerComponentOptions { 
+
+                _graphSampler.Options = new GraphSamplerComponentOptions
+                {
                     MinX = _graphSampler.Options.MinX,
                     MaxX = value,
                     Step = _graphSampler.Options.Step
                 };
-                _gridder.Options = new GridderOptions {
+                _gridder.Options = new GridderOptions
+                {
                     MinX = _gridder.Options.MinX,
                     MaxX = value,
                     MinY = _gridder.Options.MinY
@@ -61,10 +66,10 @@ namespace Assets.Scripts.Graph
             }
         }
 
-        [SerializeField]
-        private double _step = 0.05;
+        [SerializeField] private double _step = 0.05;
 
-        public double Step {
+        public double Step
+        {
             get => _graphSampler == null ? _step : _graphSampler.Options.Step;
             set
             {
@@ -72,8 +77,9 @@ namespace Assets.Scripts.Graph
 
                 if (_graphSampler == null) return;
                 if (_gridder == null) return;
-                
-                _graphSampler.Options = new GraphSamplerComponentOptions { 
+
+                _graphSampler.Options = new GraphSamplerComponentOptions
+                {
                     MinX = _graphSampler.Options.MinX,
                     MaxX = _graphSampler.Options.MaxX,
                     Step = value
@@ -81,16 +87,18 @@ namespace Assets.Scripts.Graph
             }
         }
 
-        [SerializeField]
-        private double _minY;
+        [SerializeField] private double _minY;
 
-        public double MinY {
+        public double MinY
+        {
             get => _minY;
-            set {
+            set
+            {
                 _minY = value;
 
                 if (_gridder == null) return;
-                _gridder.Options = new GridderOptions {
+                _gridder.Options = new GridderOptions
+                {
                     MinX = _gridder.Options.MinX,
                     MaxX = _gridder.Options.MaxX,
                     MinY = value
@@ -106,8 +114,8 @@ namespace Assets.Scripts.Graph
         private Gridder? _gridder;
         private AxisRenderer? _axisRenderer;
 
-        // ReSharper disable once UnusedMember.Global
-        public void Start()
+        // ReSharper disable once UnusedMember.Local
+        private void Start()
         {
             _graphSampler = GetComponent<GraphSamplerComponent>();
             _graphSampler.Options = new GraphSamplerComponentOptions()
@@ -124,18 +132,22 @@ namespace Assets.Scripts.Graph
 
             _graphSampler.OnSample += OnSample;
         }
-        
-        // ReSharper disable once UnusedMember.Global
-        public void Update() {
-            var sampleUnit = new Vector2(1.0f / _graphSampler!.SampledYList.Count, 1.0f / (float)(MaxY - _minY));
 
-            _graphRenderer!.Options = new GraphRendererOptions { Unit = sampleUnit, Offset = new Vector2(0, (float)-_minY) };
-            _graphCollider!.Options = new GraphColliderOptions { Unit = sampleUnit, Offset = new Vector2(0, (float)-_minY) };
+        // ReSharper disable once UnusedMember.Local
+        private void Update()
+        {
+            var sampleUnit = new Vector2(1.0f / _graphSampler!.SampledYList.Count, 1.0f / (float) (MaxY - _minY));
 
-            var unit = new Vector2(1.0f / (float)(_maxX - _minX), 1.0f / (float)(MaxY - _minY));
-            _axisRenderer!.Options = new AxisRendererOptions {
-                Origin = new Vector2((float)-_minX, (float)-_minY),
-                Size = new Vector2((float)(_maxX - _minX), (float)(MaxY - _minY)),
+            _graphRenderer!.Options = new GraphRendererOptions
+                {Unit = sampleUnit, Offset = new Vector2(0, (float) -_minY)};
+            _graphCollider!.Options = new GraphColliderOptions
+                {Unit = sampleUnit, Offset = new Vector2(0, (float) -_minY)};
+
+            var unit = new Vector2(1.0f / (float) (_maxX - _minX), 1.0f / (float) (MaxY - _minY));
+            _axisRenderer!.Options = new AxisRendererOptions
+            {
+                Origin = new Vector2((float) -_minX, (float) -_minY),
+                Size = new Vector2((float) (_maxX - _minX), (float) (MaxY - _minY)),
                 Unit = unit
             };
         }
@@ -148,7 +160,7 @@ namespace Assets.Scripts.Graph
 
             _validatedYArray.Clear();
             // ReSharper disable once ForCanBeConvertedToForeach
-            for (var i = 0; i < yArray.Count; i++)
+            for (var i = 0; i < yArray.Count; ++i)
             {
                 _validatedYArray.Add(Math.Min(Math.Max(yArray[i], _minY), maxY));
             }

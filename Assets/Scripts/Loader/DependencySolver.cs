@@ -46,7 +46,7 @@ namespace Assets.Scripts.Loader
             {
                 node.Depth = depth;
 
-                for (var i = 0; i < node.Children.Count; i++)
+                for (var i = 0; i < node.Children.Count; ++i)
                 {
                     BuildDepth(node.Children[i], depth + 1);
                 }
@@ -63,7 +63,7 @@ namespace Assets.Scripts.Loader
                 }
                 SceneNameToNode.Add(node.SceneName, node);
 
-                for (var i = 0; i < node.Children.Count; i++) BuildSceneNameToNode(node.Children[i]);
+                for (var i = 0; i < node.Children.Count; ++i) BuildSceneNameToNode(node.Children[i]);
             }
             BuildSceneNameToNode(DependencyTree);
         }

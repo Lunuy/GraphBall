@@ -6,13 +6,15 @@ using Assets.Scripts.Graph;
 namespace Assets.Scripts.InGame
 {
 
+    // ReSharper disable once UnusedMember.Global
     public class SimulationClient : MonoBehaviour
     {
         public GraphSamplerComponent? GraphSampler;
 
         public Simulation? Simulation;
 
-        public void Start()
+        // ReSharper disable once UnusedMember.Local
+        private void Start()
         {
             if (Simulation == null)
             {
@@ -28,7 +30,8 @@ namespace Assets.Scripts.InGame
             GraphSampler.Variables = Simulation.GetInitialVariables();
         }
 
-        public void OnDestroy()
+        // ReSharper disable once UnusedMember.Local
+        private void OnDestroy()
         {
             if (Simulation != null)
             {
