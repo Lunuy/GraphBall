@@ -12,6 +12,8 @@ namespace Assets.Scripts.Loader
                 .WithChild(new DependencyNode("GameMenu"))
                 .WithChild(new DependencyNode("GameUI")
                     .WithChild(new DependencyNode("MainScene"))
+                    .WithChild(new DependencyNode("Level0"))
+                    .WithChild(new DependencyNode("Level1"))
                     .WithChild(new DependencyNode("Level2"))
                     .WithChild(new DependencyNode("Level3"))
                 );        
