@@ -45,9 +45,6 @@ namespace Assets.Scripts.Game
                 if(collision.gameObject == Target) {
                     Success();
                 }
-                else {
-                    Failure();
-                }
             }
         }
 
@@ -69,6 +66,8 @@ namespace Assets.Scripts.Game
             base.ResetSimulation();
 
             Ball.transform.position = BallInitialPosition;
+            _t = 0;
+            VariableUpdate(new (string, double)[]{("t", _t)});
         }
     }
 }

@@ -94,7 +94,6 @@ namespace Assets.Scripts.UI
         {
             if (_equationInputContext != null)
             {
-                _equationInputContext.OnInputChanged = null;
                 _equationInputContext.OnErrorListUpdate = null;
                 _equationInputContext.OnMaxCharacterCountChanged = null;
             }
