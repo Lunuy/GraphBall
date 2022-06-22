@@ -13,13 +13,21 @@ namespace Assets.Scripts.Game
         public GameObject? Ball;
         public GameObject? Target;
 
-        public Vector3 BallInitialPosition;
+        private Vector3 _ballInitialPosition;
+        private GameObject[]? AvoidTargets;
 
         private double _t;
 
         public override (string, double)[] GetInitialVariables()
         {
             return new (string, double)[] {("t", _t)};
+        }
+
+        private void Awake() {
+            if(Ball == null) {
+                throw new Exception("Ball is null");
+            }
+            _ballInitialPosition = Ball.transform.position;
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -31,6 +39,8 @@ namespace Assets.Scripts.Game
             }
 
             CollisionEventer.OnCollisionEnter += OnCollide;
+
+            AvoidTargets = GameObject.FindGameObjectsWithTag("avoid");
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -56,7 +66,9 @@ namespace Assets.Scripts.Game
             if (collision.gameObject == Target)
             {
                 Success();
+                return;
             }
+            // for(int i = 0)
         }
 
         public override void StartSimulation()
@@ -67,7 +79,7 @@ namespace Assets.Scripts.Game
             }
 
             base.StartSimulation();
-            Ball.transform.position = BallInitialPosition;
+            Ball.transform.position = _ballInitialPosition;
             _t = 0;
         }
 
@@ -80,7 +92,7 @@ namespace Assets.Scripts.Game
 
             base.ResetSimulation();
 
-            Ball.transform.position = BallInitialPosition;
+            Ball.transform.position = _ballInitialPosition;
             _t = 0;
             VariableUpdate(new (string, double)[] {("t", _t)});
         }
