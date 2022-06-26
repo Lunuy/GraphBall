@@ -15,7 +15,7 @@ namespace Assets.Scripts.Game
         public GameObject? Target;
 
         private Vector3 _ballInitialPosition;
-        private GameObject[]? AvoidTargets;
+        private GameObject[]? _avoidTargets;
 
         private double _t;
 
@@ -24,6 +24,7 @@ namespace Assets.Scripts.Game
             return new (string, double)[] {("t", _t)};
         }
 
+        // ReSharper disable once UnusedMember.Local
         private void Awake() {
             if(Ball == null) {
                 throw new Exception("Ball is null");
@@ -41,7 +42,7 @@ namespace Assets.Scripts.Game
 
             CollisionEventer.OnCollisionEnter += OnCollide;
 
-            AvoidTargets = GameObject.FindGameObjectsWithTag("avoid");
+            _avoidTargets = GameObject.FindGameObjectsWithTag("avoid");
         }
 
         // ReSharper disable once UnusedMember.Local
