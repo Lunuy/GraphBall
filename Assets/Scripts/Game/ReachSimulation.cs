@@ -3,6 +3,7 @@ using UnityEngine;
 using Assets.Scripts.InGame;
 using Assets.Scripts.Eventer;
 using System;
+using Assets.Scripts.Utility;
 
 namespace Assets.Scripts.Game
 {
@@ -51,7 +52,10 @@ namespace Assets.Scripts.Game
                 _t += Time.deltaTime;
             }
 
-            VariableUpdate(new (string, double)[] {("t", _t)});
+            var variables = ArrayPool<(string, double)>.Rent(1);
+            variables[0] = ("t", _t);
+            VariableUpdate(variables);
+            ArrayPool<(string, double)>.Return(variables);
         }
 
         // ReSharper disable once UnusedMember.Local
