@@ -16,6 +16,12 @@ namespace Assets.Scripts.Loader
                     .WithChild(new DependencyNode("Level1"))
                     .WithChild(new DependencyNode("Level2"))
                     .WithChild(new DependencyNode("Level3"))
+                    .WithChild(new DependencyNode("Level4"))
+                    .WithChild(new DependencyNode("Level5"))
+                    .WithChild(new DependencyNode("Level6"))
+                    .WithChild(new DependencyNode("Level7"))
+                    .WithChild(new DependencyNode("Level8"))
+                    .WithChild(new DependencyNode("Level9"))
                 );        
         
         internal class DependencyNode
