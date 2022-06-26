@@ -67,24 +67,26 @@ namespace Assets.Scripts.Graph.Selection
                     var errorLevel = parseResult.Diagnostics[i].ErrorLevel;
                     var message = parseResult.Diagnostics[i].Message;
 
-                    if (errorLevel == ExprEval.Epp.ErrorLevel.Error)
+                    switch (errorLevel)
                     {
-                        diagnosticsList.Add(
-                            "<color=red>Error: " + message + "</color>"
-                        );
-                    }
-                    else if (errorLevel == ExprEval.Epp.ErrorLevel.Warning)
-                    {
-                        diagnosticsList.Add(
-                            // ReSharper disable once StringLiteralTypo
-                            "<color=#DDDD00>Warning: " + message + "</color>"
-                        );
-                    }
-                    else if (errorLevel == ExprEval.Epp.ErrorLevel.Note)
-                    {
-                        diagnosticsList.Add(
-                            "<color=gray>Note: " + message + "</color>"
-                        );
+                        case ExprEval.Epp.ErrorLevel.Error:
+                            diagnosticsList.Add(
+                                "<color=red>Error: " + message + "</color>"
+                            );
+                            break;
+                        case ExprEval.Epp.ErrorLevel.Warning:
+                            diagnosticsList.Add(
+                                // ReSharper disable once StringLiteralTypo
+                                "<color=#DDDD00>Warning: " + message + "</color>"
+                            );
+                            break;
+                        case ExprEval.Epp.ErrorLevel.Note:
+                            diagnosticsList.Add(
+                                "<color=gray>Note: " + message + "</color>"
+                            );
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
                 }
 
@@ -97,10 +99,8 @@ namespace Assets.Scripts.Graph.Selection
                 HasExprError = true;
                 return;
             }
-            else
-            {
-                HasExprError = false;
-            }
+
+            HasExprError = false;
 
             GraphSampler.Function = (t, x) =>
             {
