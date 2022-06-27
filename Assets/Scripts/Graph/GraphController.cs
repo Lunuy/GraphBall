@@ -130,6 +130,13 @@ namespace Assets.Scripts.Graph
             _gridder = GetComponent<Gridder>();
             _axisRenderer = GetComponent<AxisRenderer>();
 
+            _gridder.Options = new GridderOptions
+            {
+                MinX = _minX,
+                MaxX = _maxX,
+                MinY = _minY
+            };
+
             _graphSampler.OnSample += OnSample;
         }
 
