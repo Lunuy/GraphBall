@@ -27,6 +27,7 @@ namespace Assets.Scripts.InGame
 
             Simulation.OnSimulationSuccess += OnSimulationSuccess;
             Simulation.OnSimulationFailure += OnSimulationFailure;
+            Simulation.OnSimulationReset += OnSimulationReset;
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -61,6 +62,23 @@ namespace Assets.Scripts.InGame
             }
             
             _failedText.SetActive(true);
+        }
+
+        private void OnSimulationReset()
+        {
+            if (_clearText == null)
+            {
+                throw new Exception("_clearText is null");
+            }
+            
+            _clearText.SetActive(false);
+
+            if (_failedText == null)
+            {
+                throw new Exception("_failedText is null");
+            }
+
+            _failedText.SetActive(false);
         }
     }
 }

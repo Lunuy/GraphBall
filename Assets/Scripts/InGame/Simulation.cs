@@ -25,6 +25,9 @@ namespace Assets.Scripts.InGame
         public event SimulationEvent OnSimulationSuccess = () => { };
         public event VariableUpdate OnVariableUpdate = _ => { };
 
+        public bool isFailed { get; private set; } = false;
+        public bool isSuccess { get; private set; } = false;
+
         public abstract (string, double)[] GetInitialVariables();
 
         public SimulationState State { get; private set; } = SimulationState.Stopped;
@@ -37,6 +40,8 @@ namespace Assets.Scripts.InGame
 
         public virtual void ResetSimulation()
         {
+            isFailed = false;
+            isSuccess = false;
             OnSimulationReset.Invoke();
             State = SimulationState.Stopped;
         }
@@ -60,11 +65,21 @@ namespace Assets.Scripts.InGame
 
         public void Success()
         {
+            if(isFailed)
+            {
+                return;
+            }
+            isSuccess = true;
             OnSimulationSuccess.Invoke();
         }
 
         public void Failure()
         {
+            if(isSuccess)
+            {
+                return;
+            }
+            isFailed = true;
             OnSimulationFailure.Invoke();
         }
     }

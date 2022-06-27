@@ -11,6 +11,7 @@ namespace Assets.Scripts.Game
     public class ReachSimulation : Simulation
     {
         public CollisionEventer? CollisionEventer;
+        public TriggerEventer? TriggerEventer;
         public GameObject? Ball;
         public GameObject? Target;
 
@@ -35,12 +36,19 @@ namespace Assets.Scripts.Game
         // ReSharper disable once UnusedMember.Local
         private void Start()
         {
-            if (CollisionEventer == null)
+            if (CollisionEventer != null)
             {
-                throw new Exception("CollisionEventer is null");
+                CollisionEventer.OnCollisionEnter += OnCollide;
+            }
+            if(TriggerEventer != null)
+            {
+                TriggerEventer.OnTriggerEnter += OnTrigger;
+            }
+            if(CollisionEventer == null && TriggerEventer == null)
+            {
+                throw new Exception("CollisionEventer and TriggerEventer is null");
             }
 
-            CollisionEventer.OnCollisionEnter += OnCollide;
 
             _avoidTargets = GameObject.FindGameObjectsWithTag("avoid");
         }
@@ -63,6 +71,7 @@ namespace Assets.Scripts.Game
         private void OnDestroy()
         {
             if (CollisionEventer != null) CollisionEventer.OnCollisionEnter -= OnCollide;
+            if (TriggerEventer != null) TriggerEventer.OnTriggerEnter -= OnTrigger;
         }
 
         private void OnCollide(Collision2D collision)
@@ -73,7 +82,38 @@ namespace Assets.Scripts.Game
                 Success();
                 return;
             }
-            // for(int i = 0)
+            if (_avoidTargets != null)
+            {
+                foreach (var target in _avoidTargets)
+                {
+                    if (collision.gameObject == target)
+                    {
+                        Failure();
+                        return;
+                    }
+                }
+            }
+        }
+
+        private void OnTrigger(Collider2D collision)
+        {
+            if (State != SimulationState.Running) return;
+            if (collision.gameObject == Target)
+            {
+                Success();
+                return;
+            }
+            if (_avoidTargets != null)
+            {
+                foreach (var target in _avoidTargets)
+                {
+                    if (collision.gameObject == target)
+                    {
+                        Failure();
+                        return;
+                    }
+                }
+            }
         }
 
         public override void StartSimulation()

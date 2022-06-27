@@ -10,7 +10,7 @@ namespace Assets.Scripts.Graph
      RequireComponent(typeof(Gridder), typeof(AxisRenderer))]
     public class GraphController : MonoBehaviour
     {
-        private double _minX;
+        [SerializeField] private double _minX;
 
         public double MinX
         {

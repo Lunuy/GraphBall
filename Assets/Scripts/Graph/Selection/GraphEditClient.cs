@@ -17,8 +17,9 @@ namespace Assets.Scripts.Graph.Selection
         public event ClickHandler OnClick = delegate { };
         public event GraphUpdateHandler OnGraphUpdate = delegate { };
 
+        public uint MaxCharacterCount = 30;
         public GraphEditManager? GraphEditManager;
-        public EquationInputContext EquationInputContext = new() {MaxCharacterCount = 30};
+        public EquationInputContext EquationInputContext = new();
         public List<string> allowedVariables = new() {"x"};
         public bool HasExprError { get; private set; }
 
@@ -39,6 +40,8 @@ namespace Assets.Scripts.Graph.Selection
 
             GraphEditManager.AddClient(this);
             EquationInputContext.OnInputChanged = OnInputChanged;
+
+            EquationInputContext.MaxCharacterCount = MaxCharacterCount;
 
             OnInputChanged("0");
         }
