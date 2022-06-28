@@ -71,7 +71,12 @@ namespace Assets.Scripts.Game
         private void OnDestroy()
         {
             if (CollisionEventer != null) CollisionEventer.OnCollisionEnter -= OnCollide;
-            if (TriggerEventer != null) TriggerEventer.OnTriggerEnter -= OnTrigger;
+            if (TriggerEventer != null)
+            {
+#pragma warning disable CS8601
+                TriggerEventer.OnTriggerEnter -= OnTrigger;
+#pragma warning restore CS8601
+            }
         }
 
         private void OnCollide(Collision2D collision)
